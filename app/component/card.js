@@ -1,52 +1,81 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from 'react-native';
+import {getTypeColor} from "../utils/commonfunctions";
 
-const Card = () => {
-    return (<View style={styles.cardContainer}>
-        <View style={styles.sectionWrapper}>
-            <View style={styles.txtContainer}>
-                <Text style={styles.txtBold}>Work Purpose:</Text><Text style={styles.txtBold}>Store Visit</Text>
-            </View>
-            <View>
-                <Text style={[styles.txtBold, styles.highLight]}>Completed</Text>
-            </View>
-        </View>
-        <View style={styles.txtContainer}>
-            <Text style={styles.txtBold}>Travel Date:</Text><Text>31 October 2025</Text>
-        </View>
-        <View style={styles.txtContainer}>
-            <View style={styles.txtContainer}><Text style={styles.txtBold}>From:</Text><Text>UP</Text></View>
-            <View style={[styles.txtContainer, , styles.details]}><Text style={styles.txtBold}>To: </Text><Text>DELHI-100990</Text></View>
-        </View>
-        <View style={styles.txtContainer}>
-            <Text style={styles.txtBold}>Assigned By:</Text><Text>Pappu kumar</Text>
-        </View>
+const Card = props => {
+  const {
+    type = '',
+    workpurpose = '',
+    traveldate = '',
+    from = '',
+    to = '',
+    assignedby = '',
+  } = props?.data;
+  
+  const color = getTypeColor(type);
 
-    </View>)
-}
+  return (
+    <View style={styles.cardContainer}>
+      <View style={styles.sectionWrapper}>
+        <View style={styles.txtContainer}>
+          <Text style={styles.txtBold}>Work Purpose:</Text>
+          <Text style={styles.txtBold}>{workpurpose}</Text>
+        </View>
+        <View>
+          <Text style={[styles.txtBold, styles.highLight, color]}>{type}</Text>
+        </View>
+      </View>
+      <View style={styles.txtContainer}>
+        <Text style={styles.txtBold}>Travel Date:</Text>
+        <Text>{traveldate}</Text>
+      </View>
+      <View style={[styles.txtContainer, styles.details]}>
+        <View style={styles.txtContainer}>
+          <Text style={styles.txtBold}>From:</Text>
+          <Text>{from}</Text>
+        </View>
+        <View style={styles.txtContainer}>
+          <Text style={styles.txtBold}>To: </Text>
+          <Text>{to}</Text>
+        </View>
+      </View>
+      <View style={styles.txtContainer}>
+        <Text style={styles.txtBold}>Assigned By:</Text>
+        <Text>{assignedby}</Text>
+      </View>
+    </View>
+  );
+};
 
 export default Card;
 
 const styles = StyleSheet.create({
-    cardContainer: {
-        padding: 5
-    },
-    txtBold: {
-        fontWeight: 900,
-    },
-    txtContainer: {
-        flexDirection: "row",
-        paddingVertical: 5
-    },
-    details: {
-        paddingLeft: 120
-    },
-    sectionWrapper: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingTop: 10
-    },
-    highLight: {
-        color: "#078107ff",
-        paddingVertical: 5
-    }
-})
+  cardContainer: {
+    margin: 5,
+    paddingHorizontal: 15,
+    elevation: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  txtBold: {
+    fontWeight: 900,
+  },
+  txtContainer: {
+    flexDirection: 'row',
+    paddingVertical: 5,
+  },
+  details: {
+    justifyContent: 'space-between',
+  },
+  sectionWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  highLight: {
+    paddingVertical: 5,
+  },
+});
