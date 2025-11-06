@@ -9,12 +9,20 @@ const Logout = () => {
         <Text style={styles.txt}>Are you Sure?</Text>
         <Text style={styles.txt}>You want to logout?</Text>
       </View>
-      <TouchableOpacity
-        style={styles.btnContainer}
-        onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.btn}>Logout</Text>
-      </TouchableOpacity>
+      <View style={styles.btnWrapper}>
+        <TouchableOpacity
+          style={styles.btnContainer}
+          onPress={() => navigation.navigate('Pending')}
+        >
+          <Text style={styles.logoutBtn}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnContainer}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.btn}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -28,6 +36,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     fontSize: 24,
+    color: '#36454F',
   },
   details: {
     alignItems: 'center',
@@ -40,8 +49,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#D22B2B',
     color: '#FFFFFF',
     fontSize: 18,
+    fontWeight: '600',
     paddingHorizontal: 40,
     paddingVertical: 5,
     borderRadius: 20,
+  },
+  logoutBtn: {
+    color: '#36454F',
+    borderColor: '#36454F',
+    borderWidth: 1.5,
+    borderRadius: 20,
+    fontSize: 18,
+    fontWeight: '600',
+    paddingHorizontal: 40,
+    paddingVertical: 5,
+  },
+  btnWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

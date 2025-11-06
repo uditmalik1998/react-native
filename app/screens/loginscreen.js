@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Font from 'react-native-vector-icons/FontAwesome';
 
 const LoginScreen = () => {
   const [values, setValues] = useState({ userId: '', password: '' });
@@ -38,18 +38,27 @@ const LoginScreen = () => {
           </View>
           <View style={styles.heading}>
             <Text style={styles.headingTxt}>Travel Desk</Text>
+            <Text style={styles.subHeading}>
+              Something Text for the SubHeading
+            </Text>
           </View>
           <View style={styles.textWrapper}>
-            <TextInput
-              style={styles.userText}
-              placeholder="Enter User Id"
-              value={values.userId}
-              onChangeText={text =>
-                setValues(prevState => ({ ...prevState, userId: text }))
-              }
-              keyboardType="default"
-            />
+            <Text style={styles.userIdText}>User Id</Text>
             <View style={styles.passwordWrapper}>
+              <Font name="user" size={24} color="#D22B2B" />
+              <TextInput
+                style={styles.password}
+                placeholder="Enter User Id"
+                value={values.userId}
+                onChangeText={text =>
+                  setValues(prevState => ({ ...prevState, userId: text }))
+                }
+                keyboardType="default"
+              />
+            </View>
+            <Text style={styles.userIdText}>Password</Text>
+            <View style={styles.passwordWrapper}>
+              <Font name="lock" size={24} color="#D22B2B" />
               <TextInput
                 style={styles.password}
                 placeholder="Enter Password"
@@ -60,10 +69,11 @@ const LoginScreen = () => {
                 }
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Icon
+                <Font
                   name={showPassword ? 'eye-slash' : 'eye'}
                   size={24}
-                  color="#000000"
+                  color="#D22B2B"
+                  style={styles.eyeWrapper}
                 />
               </TouchableOpacity>
             </View>
@@ -74,6 +84,9 @@ const LoginScreen = () => {
           >
             <Text style={styles.txt}>Proceed</Text>
           </TouchableOpacity>
+          <Text style={styles.bottomHeading}>
+            Something Text for the Bottom Heading
+          </Text>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -90,29 +103,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   appLogo: {
-    width: 80,
-    height: 80,
+    width: 120,
+    height: 120,
     marginBottom: 20,
-  },
-  userText: {
-    borderWidth: 2,
-    borderColor: 'black',
-    marginBottom: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    fontSize: 16,
+    borderRadius: 60,
   },
   passwordWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#36454F',
     paddingHorizontal: 5,
     marginBottom: 20,
   },
   password: {
-    width: '90%',
+    width: '86%',
   },
   textWrapper: {
     width: '90%',
@@ -121,15 +127,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#D22B2B',
     paddingVertical: 10,
     paddingHorizontal: '38%',
+    borderRadius: 10,
   },
   txt: {
     color: 'white',
+    fontWeight: '600',
   },
   heading: {
-    marginBottom: 20,
+    marginBottom: 40,
+    alignItems: 'center',
   },
   headingTxt: {
-    fontSize: 20,
+    fontSize: 32,
     fontWeight: 900,
+    color: '#36454F',
+  },
+  subHeading: {
+    fontSize: 14,
+    color: '#36454F',
+    fontWeight: '600',
+  },
+  bottomHeading: {
+    color: '#36454F',
+    paddingTop: 30,
+  },
+  userIdText: {
+    fontWeight: '600',
+    color: '#36454F',
+    paddingBottom:5
   },
 });
