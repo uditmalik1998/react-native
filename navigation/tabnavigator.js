@@ -2,7 +2,10 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CompletedScreen from '../app/screens/completedscreen';
 import PendingScreen from '../app/screens/pendingscreen';
+import ProfileScreen from "../app/screens/profilescreen";
+import LogoutScreen from "../app/screens/logoutscreen";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import FontIcon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +23,7 @@ const TabNavigator = () => {
         component={PendingScreen}
         options={{
           headerShown: false,
-          tabBarLabel: 'Pending',
+          tabBarLabel: 'Active Request',
           tabBarIcon: ({ color, size }) => (
             <Icon name="pending-actions" size={size} color={color} />
           ),
@@ -31,15 +34,26 @@ const TabNavigator = () => {
         component={CompletedScreen}
         options={{
           headerShown: false,
-          tabBarLabel: 'Completed',
+          tabBarLabel: 'Complete',
           tabBarIcon: ({ color, size }) => (
             <Icon name="sticky-note-2" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerShown: true,
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <FontIcon name="user" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Logout"
-        component={CompletedScreen}
+        component={LogoutScreen}
         options={{
           headerShown: true,
           tabBarLabel: 'Logout',

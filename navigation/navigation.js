@@ -11,7 +11,7 @@ const NavigationStack = () => {
       <RootStack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ title: 'Login' }}
+        options={{ headerShown: false }}
       />
       <RootStack.Screen
         name="Main"
