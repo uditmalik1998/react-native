@@ -5,23 +5,25 @@ const Logout = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.logoutContainer}>
-      <View style={styles.details}>
-        <Text style={styles.txt}>Are you Sure?</Text>
-        <Text style={styles.txt}>You want to logout?</Text>
-      </View>
-      <View style={styles.btnWrapper}>
-        <TouchableOpacity
-          style={styles.btnContainer}
-          onPress={() => navigation.navigate('Pending')}
-        >
-          <Text style={styles.logoutBtn}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btnContainer}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.btn}>Logout</Text>
-        </TouchableOpacity>
+      <View style={styles.logoutWrapper}>
+        <View style={styles.details}>
+          <Text style={styles.txt}>Are you Sure?</Text>
+          <Text style={styles.txt}>You want to logout?</Text>
+        </View>
+        <View style={styles.btnWrapper}>
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => navigation.navigate('Pending')}
+          >
+            <Text style={styles.logoutBtn}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => navigation.navigate('Login')}
+          >
+            <Text style={styles.btn}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -34,12 +36,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  logoutWrapper: {
+    elevation: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    justifyContent: 'center',
+  },
   txt: {
     fontSize: 24,
     color: '#36454F',
   },
   details: {
     alignItems: 'center',
+    paddingVertical: 50,
   },
   btnContainer: {
     alignSelf: 'center',
@@ -67,5 +77,6 @@ const styles = StyleSheet.create({
   btnWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingBottom: 45,
   },
 });
