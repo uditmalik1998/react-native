@@ -20,7 +20,7 @@ const Logout = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btnContainer}
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.replace('Login')}
           >
             <Text style={styles.btn}>Logout</Text>
           </TouchableOpacity>
