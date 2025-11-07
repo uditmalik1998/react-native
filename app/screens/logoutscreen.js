@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Logout = () => {
   const navigation = useNavigation();
   return (
-    <View style={styles.logoutContainer}>
+    <SafeAreaView style={styles.logoutContainer}>
       <View style={styles.logoutWrapper}>
         <View style={styles.details}>
           <Text style={styles.txt}>Are you Sure?</Text>
@@ -25,7 +26,7 @@ const Logout = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

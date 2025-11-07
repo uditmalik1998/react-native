@@ -25,12 +25,11 @@ const Card = props => {
             {workpurpose}
           </Text>
         </View>
-        <View style={styles.typeWrapper}>
+        <View>
           <Text style={[styles.txtBold, styles.highLight, color]}>{type}</Text>
         </View>
       </View>
       <View style={styles.txtContainer}>
-        {/* <Text style={styles.txtBold}>Travel Date:</Text> */}
         <Font name="calendar-o" size={18} color="#D22B2B" />
         <Text style={styles.dateTxt}>{traveldate}</Text>
       </View>
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     marginHorizontal: 10,
     marginTop: 10,
-    marginBottom:5,
+    marginBottom: 5,
     paddingHorizontal: 15,
     elevation: 8,
     backgroundColor: '#FFFFFF',
@@ -104,14 +103,11 @@ const styles = StyleSheet.create({
   },
   highLight: {
     paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
   workPurpose: {
     fontSize: 24,
-  },
-  typeWrapper: {
-    backgroundColor: '#fffee0',
-    paddingHorizontal: 10,
-    borderradius: 5,
   },
   dateTxt: {
     fontWeight: '600',
@@ -126,8 +122,8 @@ const styles = StyleSheet.create({
   },
   lIconWrapper: {
     backgroundColor: '#D22B2B',
-    borderRadius:5,
-    padding:5,
-    marginRight:5
+    borderRadius: 5,
+    padding: 5,
+    marginRight: 5,
   },
 });

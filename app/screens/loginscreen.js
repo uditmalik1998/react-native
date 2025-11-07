@@ -14,11 +14,21 @@ import {
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Font from 'react-native-vector-icons/FontAwesome';
+import { validateForm } from '../utils/commonfunctions';
 
 const LoginScreen = () => {
   const [values, setValues] = useState({ userId: '', password: '' });
+  const [error, setError] = useState({ userId: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+
+  const handleClick = () => {
+    setError({userId:"",password:""});
+    const isError = validateForm(values, setError);
+    if (!isError) {
+      navigation.navigate('Main');
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -56,6 +66,7 @@ const LoginScreen = () => {
                 keyboardType="default"
               />
             </View>
+            {error?.userId && <Text style={styles.err}>{error.userId}</Text>}
             <Text style={styles.userIdText}>Password</Text>
             <View style={styles.passwordWrapper}>
               <Font name="lock" size={24} color="#D22B2B" />
@@ -77,11 +88,11 @@ const LoginScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+            {error?.password && (
+              <Text style={styles.err}>{error.password}</Text>
+            )}
           </View>
-          <TouchableOpacity
-            style={styles.proceedBtn}
-            onPress={() => navigation.navigate('Main')}
-          >
+          <TouchableOpacity style={styles.proceedBtn} onPress={handleClick}>
             <Text style={styles.txt}>Proceed</Text>
           </TouchableOpacity>
           <Text style={styles.bottomHeading}>
@@ -154,6 +165,10 @@ const styles = StyleSheet.create({
   userIdText: {
     fontWeight: '600',
     color: '#36454F',
-    paddingBottom:5
+    paddingBottom: 5,
+  },
+  err: {
+    color: '#D22B2B',
+    paddingBottom:5,
   },
 });

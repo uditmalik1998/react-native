@@ -6,6 +6,7 @@ import ProfileScreen from '../app/screens/profilescreen';
 import LogoutScreen from '../app/screens/logoutscreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
+import CustomHeader from '../app/component/customheader';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,10 +20,11 @@ const TabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Pending"
+        name={'Pending'}
         component={PendingScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitle: () => <CustomHeader heading="Active Request" />,
           tabBarLabel: 'Active Request',
           tabBarIcon: ({ color, size }) => (
             <Icon name="pending-actions" size={size} color={color} />
@@ -33,7 +35,13 @@ const TabNavigator = () => {
         name="Completed"
         component={CompletedScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitle: () => (
+            <CustomHeader
+              heading="Completed Request"
+              iconName="sticky-note-2"
+            />
+          ),
           tabBarLabel: 'Complete',
           tabBarIcon: ({ color, size }) => (
             <Icon name="sticky-note-2" size={size} color={color} />
@@ -44,8 +52,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          headerStyle: { backgroundColor: '#E4ECF8' },
-          headerTitleStyle: { color: '#36454F' },
+          headerTitle: () => <CustomHeader heading="Profile" iconName="user" />,
           headerShown: true,
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
@@ -57,7 +64,7 @@ const TabNavigator = () => {
         name="Logout"
         component={LogoutScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
           tabBarLabel: 'Logout',
           tabBarIcon: ({ color, size }) => (
             <Icon name="logout" size={size} color={color} />
