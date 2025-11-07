@@ -2,8 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CompletedScreen from '../app/screens/completedscreen';
 import PendingScreen from '../app/screens/pendingscreen';
-import ProfileScreen from "../app/screens/profilescreen";
-import LogoutScreen from "../app/screens/logoutscreen";
+import ProfileScreen from '../app/screens/profilescreen';
+import LogoutScreen from '../app/screens/logoutscreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -44,6 +44,8 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
+          headerStyle: { backgroundColor: '#E4ECF8' },
+          headerTitleStyle: { color: '#36454F' },
           headerShown: true,
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (

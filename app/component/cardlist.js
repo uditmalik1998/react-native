@@ -1,18 +1,21 @@
-import { FlatList, View } from 'react-native';
+import { FlatList, ScrollView } from 'react-native';
 import Card from './card';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const CardList = (props) => {
-  const {data = []} = props;
+const CardList = props => {
+  const { data = [] } = props;
   return (
-    <View>
-      <FlatList
-        data={data}
-        renderItem={item => {
-          return(<Card data={item?.item} />);
-        }}
-        keyExtractor={(item, index) => item?.id?.toString()}
-      />
-    </View>
+    <SafeAreaView>
+      <ScrollView>
+        <FlatList
+          data={data}
+          renderItem={item => {
+            return <Card data={item?.item} />;
+          }}
+          keyExtractor={item => item?.id?.toString()}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
