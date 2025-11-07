@@ -6,13 +6,13 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const ProfileScreen = () => {
   return (
-    <View style={styles.profileWrapper}>
+    <View>
       <View style={styles.logoWrapper}>
         <Icon name="user-circle-o" color="#36454F" size={100} />
       </View>
       <View style={styles.nameWrapper}>
-        <View>
-          <Icon name="user-o" size={40} color="#36454F" />
+        <View style={styles.iconWrapper}>
+          <Icon name="user-o" size={30} color="#D22B2B" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Name</Text>
@@ -20,8 +20,8 @@ const ProfileScreen = () => {
         </View>
       </View>
       <View style={styles.nameWrapper}>
-        <View>
-          <Entypo name="calculator" size={40} color="#36454F" />
+        <View style={styles.iconWrapper}>
+          <Entypo name="calculator" size={30} color="#D22B2B" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Emp Code</Text>
@@ -29,8 +29,8 @@ const ProfileScreen = () => {
         </View>
       </View>
       <View style={styles.nameWrapper}>
-        <View>
-          <Icon name="laptop" size={40} color="#36454F" />
+        <View style={styles.iconWrapper}>
+          <Icon name="laptop" size={30} color="#D22B2B" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Designation</Text>
@@ -38,8 +38,8 @@ const ProfileScreen = () => {
         </View>
       </View>
       <View style={styles.nameWrapper}>
-        <View>
-          <Feather name="users" size={40} color="#36454F" />
+        <View style={styles.iconWrapper}>
+          <Feather name="users" size={30} color="#D22B2B" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Departement</Text>
@@ -47,8 +47,8 @@ const ProfileScreen = () => {
         </View>
       </View>
       <View style={styles.nameWrapper}>
-        <View>
-          <Fontisto name="email" size={40} color="#36454F" />
+        <View style={styles.iconWrapper}>
+          <Fontisto name="email" size={26} color="#D22B2B" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Email</Text>
@@ -62,10 +62,6 @@ const ProfileScreen = () => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  profileWrapper: {
-    flex: 1,
-    backgroundColor: '#E4ECF8',
-  },
   nameWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,13 +74,14 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   txtLabel: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 16,
+    fontWeight: '700',
     color: '#36454F',
+    letterSpacing: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
     color: '#36454F',
   },
   details: {
@@ -92,7 +89,19 @@ const styles = StyleSheet.create({
   },
   logoWrapper: {
     alignSelf: 'center',
-    paddingTop: 20,
-    paddingBottom: 25,
+    padding: 20,
+    margin: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 60,
+  },
+  iconWrapper: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#F5F9FD',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    elevation: 2,
   },
 });
