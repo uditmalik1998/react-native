@@ -1,8 +1,10 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { getTypeColor } from '../utils/commonfunctions';
 import Font from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
+import CustomModal from './custommodal';
+import TravelRoute from './travelroute';
 
 const Card = props => {
   const {
@@ -13,57 +15,73 @@ const Card = props => {
     to = '',
     assignedby = '',
   } = props?.data;
+  const { isOpen = false, setIsOpen = () => {} } = props;
 
   const color = getTypeColor(type);
 
   return (
-    <View style={styles.cardContainer}>
-      <View style={styles.sectionWrapper}>
-        <View style={styles.txtContainer}>
-          {/* <Text style={styles.txtBold}>Work Purpose:</Text> */}
-          <Text style={[styles.txtBold, styles.workPurpose]}>
-            {workpurpose}
-          </Text>
-        </View>
-        <View>
-          <Text style={[styles.txtBold, styles.highLight, color]}>{type}</Text>
-        </View>
-      </View>
-      <View style={styles.txtContainer}>
-        <Font name="calendar-o" size={18} color="#D22B2B" />
-        <Text style={styles.dateTxt}>{traveldate}</Text>
-      </View>
-      <View style={[styles.txtContainer, styles.details]}>
-        <View style={styles.txtContainer}>
-          <View style={styles.lIconWrapper}>
-            <Entypo name="location-pin" size={22} color="#FFFFFF" />
+    <>
+      <TouchableOpacity
+        style={styles.cardContainer}
+        onPress={() => setIsOpen(true)}
+      >
+        <View style={styles.sectionWrapper}>
+          <View style={styles.txtContainer}>
+            {/* <Text style={styles.txtBold}>Work Purpose:</Text> */}
+            <Text style={[styles.txtBold, styles.workPurpose]}>
+              {workpurpose}
+            </Text>
           </View>
           <View>
-            <Text style={styles.txtBold}>From:</Text>
-            <Text style={styles.assignedTxt}>{from}</Text>
+            <Text style={[styles.txtBold, styles.highLight, color]}>
+              {type}
+            </Text>
           </View>
         </View>
-        <Feather name="arrow-right" size={24} color="#D22B2B" />
         <View style={styles.txtContainer}>
-          <View style={styles.lIconWrapper}>
-            <Entypo name="location-pin" size={22} color="#FFFFFF" />
+          <Font name="calendar-o" size={18} color="#D22B2B" />
+          <Text style={styles.dateTxt}>{traveldate}</Text>
+        </View>
+        <View style={[styles.txtContainer, styles.details]}>
+          <View style={styles.txtContainer}>
+            <View style={styles.lIconWrapper}>
+              <Entypo name="location-pin" size={22} color="#FFFFFF" />
+            </View>
+            <View>
+              <Text style={styles.txtBold}>From:</Text>
+              <Text style={styles.assignedTxt}>{from}</Text>
+            </View>
+          </View>
+          <Feather name="arrow-right" size={24} color="#D22B2B" />
+          <View style={styles.txtContainer}>
+            <View style={styles.lIconWrapper}>
+              <Entypo name="location-pin" size={22} color="#FFFFFF" />
+            </View>
+            <View>
+              <Text style={styles.txtBold}>To: </Text>
+              <Text style={styles.assignedTxt}>{to}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.txtContainer}>
+          <View style={styles.userLogo}>
+            <Font name="user" size={24} color="#D22B2B" />
           </View>
           <View>
-            <Text style={styles.txtBold}>To: </Text>
-            <Text style={styles.assignedTxt}>{to}</Text>
+            <Text style={styles.txtBold}>Assigned By:</Text>
+            <Text style={styles.assignedTxt}>{assignedby}</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.txtContainer}>
-        <View style={styles.userLogo}>
-          <Font name="user" size={24} color="#D22B2B" />
-        </View>
-        <View>
-          <Text style={styles.txtBold}>Assigned By:</Text>
-          <Text style={styles.assignedTxt}>{assignedby}</Text>
-        </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+      {isOpen && (
+        <CustomModal onClose={() => setIsOpen(!isOpen)} open={isOpen}>
+          <View>
+            <Card data={props?.data} />
+            <TravelRoute />
+          </View>
+        </CustomModal>
+      )}
+    </>
   );
 };
 
