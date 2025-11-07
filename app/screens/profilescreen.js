@@ -6,49 +6,54 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const ProfileScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.logoWrapper}>
-        <Icon name="user-circle-o" color="#36454F" size={100} />
+        <Icon
+          name="user-circle-o"
+          color="#36454F"
+          size={100}
+          style={styles.logoIcon}
+        />
       </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.iconWrapper}>
-          <Icon name="user-o" size={30} color="#D22B2B" />
+      <View style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Icon name="user-o" size={30} color="#5A9BF6" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Name</Text>
           <Text style={styles.name}>Udit Malik</Text>
         </View>
       </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.iconWrapper}>
-          <Entypo name="calculator" size={30} color="#D22B2B" />
+      <View style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Entypo name="calculator" size={30} color="#F77676" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Emp Code</Text>
           <Text style={styles.name}>V2454</Text>
         </View>
       </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.iconWrapper}>
-          <Icon name="laptop" size={30} color="#D22B2B" />
+      <View style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Icon name="laptop" size={30} color="#F8B76A" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Designation</Text>
           <Text style={styles.name}>Developer</Text>
         </View>
       </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.iconWrapper}>
-          <Feather name="users" size={30} color="#D22B2B" />
+      <View style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Feather name="users" size={30} color="#67C587" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Departement</Text>
           <Text style={styles.name}>IT</Text>
         </View>
       </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.iconWrapper}>
-          <Fontisto name="email" size={26} color="#D22B2B" />
+      <View style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Fontisto name="email" size={26} color="#B67CF7" />
         </View>
         <View style={styles.details}>
           <Text style={styles.txtLabel}>Email</Text>
@@ -62,39 +67,42 @@ const ProfileScreen = () => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  nameWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    elevation: 10,
-  },
-  txtLabel: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#36454F',
-    letterSpacing: 1,
-  },
-  name: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#36454F',
-  },
-  details: {
-    paddingHorizontal: 20,
+  container: {
+    flex: 1,
+    backgroundColor: 'linear-gradient(180deg, #E3F0FF 0%, #EBF5FB 100%)',
+    paddingTop: 20,
   },
   logoWrapper: {
     alignSelf: 'center',
-    padding: 20,
-    margin: 10,
-    backgroundColor: '#FFFFFF',
+    marginBottom: 25,
+    backgroundColor: '#FFF',
+    padding: 18,
     borderRadius: 60,
+    elevation: 6,
+    shadowColor: '#A6DCEF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
   },
-  iconWrapper: {
+  logoIcon: {
+    alignSelf: 'center',
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 22,
+    marginVertical: 13,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    elevation: 12,
+    shadowColor: '#CDF0EA',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+  },
+  iconCircle: {
     width: 52,
     height: 52,
     borderRadius: 26,
@@ -103,5 +111,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 16,
     elevation: 2,
+  },
+  txtLabel: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#36454F',
+    marginBottom: 3,
+    letterSpacing: 1,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6A7B8C',
+  },
+  details: {
+    flex: 1,
   },
 });
