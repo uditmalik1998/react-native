@@ -1,13 +1,21 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { removeItem } from '../utils/AsyncStorage';
+import { getItem, removeItem } from '../utils/AsyncStorage';
+import { useEffect } from 'react';
 
 const Logout = () => {
   const navigation = useNavigation();
 
-  const handleLogout = () => {
-    removeItem('token');
+  useEffect(() => {
+    (async function(){
+      const token = await getItem('token');
+      console.log(token);
+    })();
+  }, []);
+
+  const handleLogout = async () => {
+    await removeItem('token');
     navigation.replace('Login');
   };
 

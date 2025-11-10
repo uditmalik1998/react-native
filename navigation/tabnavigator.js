@@ -6,7 +6,9 @@ import ProfileScreen from '../app/screens/profilescreen';
 import LogoutScreen from '../app/screens/logoutscreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomHeader from '../app/component/customheader';
+import CreateScreen from "../app/screens/createscreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,9 +27,21 @@ const TabNavigator = () => {
         options={{
           headerShown: true,
           headerTitle: () => <CustomHeader heading="Active Request" />,
-          tabBarLabel: 'Active Request',
+          tabBarLabel: 'Active',
           tabBarIcon: ({ color, size }) => (
             <Icon name="pending-actions" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={'Create'}
+        component={CreateScreen}
+        options={{
+          headerShown: true,
+          headerTitle: () => <CustomHeader heading="Create Request" />,
+          tabBarLabel: 'Create',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="create" size={size} color={color} />
           ),
         }}
       />

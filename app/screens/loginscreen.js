@@ -11,11 +11,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Font from 'react-native-vector-icons/FontAwesome';
 import { validateForm } from '../utils/commonfunctions';
-import { setItem } from '../utils/AsyncStorage';
+import { getItem, setItem } from '../utils/AsyncStorage';
 
 const LoginScreen = () => {
   const [values, setValues] = useState({ userId: '', password: '' });
@@ -26,6 +26,15 @@ const LoginScreen = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    (async function () {
+      const token = await getItem('token');
+      if (token) {
+        navigation.navigate('Main');
+      }
+    })();
+  }, []);
 
   const handleClick = async () => {
     setError({ userId: '', password: '' });
