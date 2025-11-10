@@ -11,6 +11,7 @@ const Card = props => {
     type = '',
     workpurpose = '',
     traveldate = '',
+    traveldateto = '',
     from = '',
     to = '',
     assignedby = '',
@@ -27,21 +28,35 @@ const Card = props => {
       >
         <View style={styles.sectionWrapper}>
           <View style={styles.txtContainer}>
-            {/* <Text style={styles.txtBold}>Work Purpose:</Text> */}
             <Text style={[styles.txtBold, styles.workPurpose]}>
               {workpurpose}
             </Text>
           </View>
-          <View>
-            <Text style={[styles.txtBold, styles.highLight, color]}>
-              {type}
-            </Text>
+          {props?.isModalOpen ? null : (
+            <View>
+              <Text style={[styles.txtBold, styles.highLight, color]}>
+                {type}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <View style={[styles.txtContainer, styles.details]}>
+          <View style={styles.calanderWrapper}>
+            <Font name="calendar-o" size={18} color="#D22B2B" />
+            <Text style={styles.dateTxt}>{traveldate}</Text>
           </View>
+          {props?.isModalOpen ? (
+            <>
+              <Feather name="arrow-right" size={24} color="#D22B2B" />
+              <View style={styles.calanderWrapper}>
+                <Font name="calendar-o" size={18} color="#D22B2B" />
+                <Text style={styles.dateTxt}>{traveldateto}</Text>
+              </View>
+            </>
+          ) : null}
         </View>
-        <View style={styles.txtContainer}>
-          <Font name="calendar-o" size={18} color="#D22B2B" />
-          <Text style={styles.dateTxt}>{traveldate}</Text>
-        </View>
+
         <View style={[styles.txtContainer, styles.details]}>
           <View style={styles.txtContainer}>
             <View style={styles.lIconWrapper}>
@@ -75,8 +90,8 @@ const Card = props => {
       </TouchableOpacity>
       {isOpen && (
         <CustomModal onClose={() => setIsOpen(!isOpen)} open={isOpen}>
-          <View>
-            <Card data={props?.data} />
+          <View style={styles.modalWrapper}>
+            <Card data={props?.data} isModalOpen={true} />
             <TravelRoute />
           </View>
         </CustomModal>
@@ -109,6 +124,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 5,
     alignItems: 'center',
+  },
+  calanderWrapper: {
+    flexDirection: 'row',
   },
   details: {
     justifyContent: 'space-between',
@@ -143,5 +161,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     marginRight: 5,
+  },
+  modalWrapper: {
+    backgroundColor: '#FFFFFF',
+    flex: 1,
   },
 });

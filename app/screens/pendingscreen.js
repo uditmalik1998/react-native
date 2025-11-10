@@ -8,19 +8,21 @@ const PendingScreen = () => {
       id: 1,
       type: 'Open',
       workpurpose: 'Project Work',
-      traveldate: '26 Setpember 2025',
+      traveldate: '26 September 2025',
       from: 'HO-NEW-DELHI',
       to: 'MUZAFFARNAGAR',
       assignedby: 'Udit Malik',
+      traveldateto: '30 September 2025',
     },
     {
       id: 2,
       type: 'Open',
       workpurpose: 'Project Work',
-      traveldate: '26 Setpember 2025',
+      traveldate: '26 September 2025',
       from: 'HO-NEW-DELHI',
       to: 'MUZAFFARNAGAR',
       assignedby: 'Udit Malik',
+      traveldateto: '30 September 2025',
     },
   ];
   return (
