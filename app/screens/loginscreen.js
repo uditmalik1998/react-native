@@ -15,6 +15,7 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Font from 'react-native-vector-icons/FontAwesome';
 import { validateForm } from '../utils/commonfunctions';
+import { setItem } from '../utils/AsyncStorage';
 
 const LoginScreen = () => {
   const [values, setValues] = useState({ userId: '', password: '' });
@@ -43,9 +44,15 @@ const LoginScreen = () => {
             body: JSON.stringify(payload),
           },
         );
-        const json = await data.json();
-        console.log(json);
-        // navigation.navigate('Main');
+
+        if (data.ok) {
+          const json = await data.json();
+          setItem('token', json?.access_Token);
+          navigation.navigate('Main');
+          return;
+        }
+        const error = await data.text();
+        setError(prevState => ({ ...prevState, apiError: error }));
       } catch (err) {
         console.error(err);
         setError(prevState => ({ ...prevState, apiError: err.message }));

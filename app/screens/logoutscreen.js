@@ -1,9 +1,16 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { removeItem } from '../utils/AsyncStorage';
 
 const Logout = () => {
   const navigation = useNavigation();
+
+  const handleLogout = () => {
+    removeItem('token');
+    navigation.replace('Login');
+  };
+
   return (
     <SafeAreaView style={styles.logoutContainer}>
       <View style={styles.logoutWrapper}>
@@ -18,10 +25,7 @@ const Logout = () => {
           >
             <Text style={styles.logoutBtn}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => navigation.replace('Login')}
-          >
+          <TouchableOpacity style={styles.btnContainer} onPress={handleLogout}>
             <Text style={styles.btn}>Logout</Text>
           </TouchableOpacity>
         </View>
