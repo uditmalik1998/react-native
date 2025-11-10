@@ -18,15 +18,38 @@ import { validateForm } from '../utils/commonfunctions';
 
 const LoginScreen = () => {
   const [values, setValues] = useState({ userId: '', password: '' });
-  const [error, setError] = useState({ userId: '', password: '' });
+  const [error, setError] = useState({
+    userId: '',
+    password: '',
+    apiError: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
-  const handleClick = () => {
-    setError({userId:"",password:""});
+  const handleClick = async () => {
+    setError({ userId: '', password: '' });
     const isError = validateForm(values, setError);
     if (!isError) {
-      navigation.navigate('Main');
+      try {
+        const payload = {
+          code: values.userId,
+          password: values.password,
+        };
+        const data = await fetch(
+          'https://traveldesk.v2retail.com:5050/api/Auth/login',
+          {
+            method: 'post',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload),
+          },
+        );
+        const json = await data.json();
+        console.log(json);
+        // navigation.navigate('Main');
+      } catch (err) {
+        console.error(err);
+        setError(prevState => ({ ...prevState, apiError: err.message }));
+      }
     }
   };
 
@@ -90,6 +113,9 @@ const LoginScreen = () => {
             </View>
             {error?.password && (
               <Text style={styles.err}>{error.password}</Text>
+            )}
+            {error?.apiError && (
+              <Text style={styles.err}>{error.apiError}</Text>
             )}
           </View>
           <TouchableOpacity style={styles.proceedBtn} onPress={handleClick}>
@@ -169,6 +195,6 @@ const styles = StyleSheet.create({
   },
   err: {
     color: '#D22B2B',
-    paddingBottom:5,
+    paddingBottom: 5,
   },
 });
