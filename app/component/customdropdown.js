@@ -1,5 +1,3 @@
-'use client';
-
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
