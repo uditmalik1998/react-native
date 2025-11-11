@@ -1,44 +1,120 @@
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import CustomDropDown from '../component/customdropdown';
+import { View, StyleSheet, ScrollView, Text, SafeAreaView } from 'react-native';
+import { types, pick } from '@react-native-documents/picker';
+import CreateForm from '../component/createform';
 
 const CreateScreen = () => {
-  const [value, setValue] = useState(null);
-  const [to, setTo] = useState(null);
+  const [dropdownData, setDropDownData] = useState({
+    locationFrom: null,
+    locationTo: null,
+    budgetedAmount: '0',
+    assignedBy: null,
+    visitPurpose: null,
+    travelMode: null,
+    fromDate: 'mm/dd/yyyy',
+    toDate: 'mm/dd/yyyy',
+    remarks: '',
+  });
+  const [isDatePickershow, setIsDatePickerShow] = useState({
+    fromDate: false,
+    toDate: false,
+  });
 
-  console.log(value, '***');
+  const [dropDownItems, setDropDownItems] = useState({
+    locationFromItems: [
+      { label: 'GURAKHPUR_U114', value: 'U114' },
+      { label: 'GURAKHPUR_U115', value: 'U115' },
+      { label: 'GURAKHPUR_U116', value: 'U116' },
+    ],
+    locationToItems: [
+      { label: 'GURAKHPUR_U114', value: 'U114' },
+      { label: 'GURAKHPUR_U115', value: 'U115' },
+      { label: 'GURAKHPUR_U116', value: 'U116' },
+    ],
+    assignedToItems: [{ label: 'NIKHIL VIG', value: 'U114' }],
+    visitPurposeItems: [
+      { label: 'IT Work', value: 'it work' },
+      { label: 'Other Work', value: 'other work' },
+    ],
+    modeItems: [
+      { label: 'Bus', value: 'bus' },
+      { label: 'Car', value: 'car' },
+    ],
+  });
+
+  const formatDate = date => {
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${mm}/${dd}/${yyyy}`;
+  };
+
+  const handleFromDate = (event, selectedDate) => {
+    setDropDownData(prev => ({ ...prev, fromDate: formatDate(selectedDate) }));
+    setIsDatePickerShow(prev => ({ ...prev, fromDate: false }));
+    console.log(event, selectedDate.toString(), dropdownData.fromDate);
+  };
+
+  const handleToDate = (event, selectedDate) => {
+    setDropDownData(prev => ({ ...prev, toDate: formatDate(selectedDate) }));
+    setIsDatePickerShow(prev => ({ ...prev, toDate: false }));
+    console.log(event, selectedDate.toString(), dropdownData.toDate);
+  };
+
+  const handleDocumentSelection = async () => {
+    try {
+      const response = await pick({ type: [types.images] });
+      console.log(response);
+    } catch (err) {
+      console.error('Error While Taking File', err);
+    }
+  };
+
+  const handleSubmit = () => {
+    console.log(dropdownData, 'INDIA****');
+  };
+
   return (
-    <View style={styles.createWrapper}>
-      <View>
-        <CustomDropDown
-          value={value}
-          setValue={setValue}
-          items={[
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-          ]}
-        />
-      </View>
-      <View>
-        <CustomDropDown
-          value={to}
-          setValue={setTo}
-          items={[
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-            { label: 'GURAKHPUR_U114', value: 'U114' },
-          ]}
-        />
-      </View>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.createWrapper}>
+          <CreateForm
+            dropdownData={dropdownData}
+            setDropDownData={setDropDownData}
+            isDatePickershow={isDatePickershow}
+            setIsDatePickerShow={setIsDatePickerShow}
+            dropDownItems={dropDownItems}
+            setDropDownItems={setDropDownItems}
+            handleFromDate={handleFromDate}
+            handleToDate={handleToDate}
+            handleDocumentSelection={handleDocumentSelection}
+            handleSubmit={handleSubmit}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default CreateScreen;
 
 const styles = StyleSheet.create({
-  createWrapper:{
-    margin:10
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 32,
+  },
+  createWrapper: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
 });
