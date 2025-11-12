@@ -10,6 +10,7 @@ const CustomDropDown = props => {
     items = [],
     setItems = () => {},
     placeholder = 'Select an Item',
+    onBlur = () => {},
   } = props;
   return (
     <View style={styles.wrapper}>
@@ -28,6 +29,7 @@ const CustomDropDown = props => {
         labelStyle={styles.labelStyle}
         arrowIconStyle={styles.arrowIconStyle}
         tickIconStyle={styles.tickIconStyle}
+        onBlur={onBlur}
       />
     </View>
   );

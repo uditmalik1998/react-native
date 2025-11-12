@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import CustomDropDown from './customdropdown';
 import CustomDatePicker from './customdatepicker';
+import { useForm, Controller } from 'react-hook-form';
 
 const CreateForm = props => {
   const {
@@ -19,8 +20,14 @@ const CreateForm = props => {
     handleFromDate = () => {},
     handleToDate = () => {},
     handleDocumentSelection = () => {},
-    handleSubmit = () => {},
+    handleSubmitForm = () => {},
   } = props;
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
 
   return (
     <View style={styles.formContainer}>
@@ -30,62 +37,92 @@ const CreateForm = props => {
         style={[styles.dropdownContainer, { zIndex: 2000, elevation: 2000 }]}
       >
         <Text style={styles.label}>Location From</Text>
-        <CustomDropDown
-          value={dropdownData.locationFrom}
-          setValue={val => {
-            setDropDownData(prev => ({ ...prev, locationFrom: val() }));
-          }}
-          items={dropDownItems.locationFromItems}
-          setItems={newItems =>
-            setDropDownItems(prev => ({
-              ...prev,
-              locationFromItems: newItems,
-            }))
-          }
-          placeholder="Select Location From"
+        <Controller
+          control={control}
+          name="locationFrom"
+          rules={{ required: 'Please select the location From' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomDropDown
+              value={value}
+              setValue={onChange}
+              onBlur={onBlur}
+              items={dropDownItems.locationFromItems}
+              setItems={newItems =>
+                setDropDownItems(prev => ({
+                  ...prev,
+                  locationFromItems: newItems,
+                }))
+              }
+              placeholder="Select Location From"
+            />
+          )}
         />
+        {errors.locationFrom && (
+          <Text style={styles.error}>{errors.locationFrom.message}</Text>
+        )}
       </View>
 
       <View
         style={[styles.dropdownContainer, { zIndex: 1000, elevation: 1000 }]}
       >
         <Text style={styles.label}>Location To</Text>
-        <CustomDropDown
-          value={dropdownData.locationTo}
-          setValue={val =>
-            setDropDownData(prev => ({ ...prev, locationTo: val() }))
-          }
-          items={dropDownItems.locationToItems}
-          setItems={newItems =>
-            setDropDownItems(prev => ({
-              ...prev,
-              locationFromItems: newItems,
-            }))
-          }
-          placeholder="Select Location To"
+        <Controller
+          control={control}
+          name="locationTo"
+          rules={{ required: 'Please Select Location To' }}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <CustomDropDown
+              value={value}
+              setValue={onChange}
+              onBlur={onBlur}
+              items={dropDownItems.locationToItems}
+              setItems={newItems =>
+                setDropDownItems(prev => ({
+                  ...prev,
+                  locationFromItems: newItems,
+                }))
+              }
+              placeholder="Select Location To"
+            />
+          )}
         />
+        {errors.locationTo && (
+          <Text style={styles.error}>{errors.locationTo.message}</Text>
+        )}
       </View>
 
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>Budgeted Amount</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.currencySymbol}>₹</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter amount"
-            placeholderTextColor="#9CA3AF"
-            keyboardType="numeric"
-            value={dropdownData.budgetedAmount}
-            onChangeText={val =>
-              setDropDownData(prev => ({ ...prev, budgetedAmount: val }))
-            }
+          <Controller
+            control={control}
+            name="budgetedAmount"
+            rules={{ required: 'Budgeted Amount is required' }}
+            render={({ field: { value, onChange, onBlur } }) => {
+              return (
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Enter amount"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numeric"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              );
+            }}
           />
         </View>
+        {errors.budgetedAmount && (
+          <Text style={styles.error}>{errors.budgetedAmount.message}</Text>
+        )}
       </View>
 
       <View style={styles.dateSection}>
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>From Date</Text>
+
           <TouchableOpacity
             style={styles.dateButton}
             onPress={() =>
@@ -95,11 +132,35 @@ const CreateForm = props => {
             <Text style={styles.calendarIcon}>📅</Text>
             <Text style={styles.dateText}>{dropdownData.fromDate}</Text>
           </TouchableOpacity>
-          {isDatePickershow.fromDate && (
-            <CustomDatePicker value={new Date()} onChange={handleFromDate} />
-          )}
+
+          <Controller
+            name="fromDate"
+            control={control}
+            rules={{
+              required: 'Please select From Date',
+              validate: value =>
+                value instanceof Date || 'Please select a valid To Date',
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                {isDatePickershow.fromDate && (
+                  <CustomDatePicker
+                    value={value || new Date()}
+                    onChange={selectedDate => {
+                      onChange(selectedDate); 
+                      handleFromDate(selectedDate);
+                    }}
+                    onBlur={onBlur}
+                  />
+                )}
+                {errors.fromDate && (
+                  <Text style={styles.error}>{errors.fromDate.message}</Text>
+                )}
+              </>
+            )}
+          />
         </View>
-        
+
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>To Date</Text>
           <TouchableOpacity
@@ -109,12 +170,39 @@ const CreateForm = props => {
             }
           >
             <Text style={styles.calendarIcon}>📅</Text>
-            <Text style={styles.dateText}>{dropdownData.toDate}</Text>
+            <Text style={styles.dateText}>
+              {dropdownData.toDate || 'mm/dd/yyyy'}
+            </Text>
           </TouchableOpacity>
-          {isDatePickershow.toDate && (
-            <CustomDatePicker value={new Date()} onChange={handleToDate} />
-          )}
+
+          <Controller
+            name="toDate"
+            control={control}
+            rules={{
+              required: 'Please select To Date',
+              validate: value =>
+                value instanceof Date || 'Please select a valid To Date',
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                {isDatePickershow.toDate && (
+                  <CustomDatePicker
+                    value={value || new Date()}
+                    onChange={selectedDate => {
+                      onChange(selectedDate); 
+                      handleToDate(selectedDate); 
+                    }}
+                    onBlur={onBlur}
+                  />
+                )}
+                {errors.toDate && (
+                  <Text style={styles.error}>{errors.toDate.message}</Text>
+                )}
+              </>
+            )}
+          />
         </View>
+
       </View>
 
       <View style={styles.divider} />
@@ -124,75 +212,111 @@ const CreateForm = props => {
         style={[styles.dropdownContainer, { zIndex: 1000, elevation: 1000 }]}
       >
         <Text style={styles.label}>Assigned By</Text>
-        <CustomDropDown
-          value={dropdownData.assignedBy}
-          setValue={val =>
-            setDropDownData(prev => ({ ...prev, assignedBy: val() }))
-          }
-          items={dropDownItems.assignedToItems}
-          setItems={newItems =>
-            setDropDownItems(prev => ({
-              ...prev,
-              assignedToItems: newItems,
-            }))
-          }
-          placeholder="Select Assigned By"
+        <Controller
+          name="assignedBy"
+          control={control}
+          rules={{ required: 'Please Enter Assigned By' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomDropDown
+              value={value}
+              setValue={onChange}
+              items={dropDownItems.assignedToItems}
+              onBlur={onBlur}
+              setItems={newItems =>
+                setDropDownItems(prev => ({
+                  ...prev,
+                  assignedToItems: newItems,
+                }))
+              }
+              placeholder="Select Assigned By"
+            />
+          )}
         />
+        {errors.assignedBy && (
+          <Text style={styles.error}>{errors.assignedBy.message}</Text>
+        )}
       </View>
 
       <View style={[styles.dropdownContainer, { zIndex: 999, elevation: 999 }]}>
         <Text style={styles.label}>Visit Purpose</Text>
-        <CustomDropDown
-          value={dropdownData.visitPurpose}
-          setValue={val =>
-            setDropDownData(prev => ({ ...prev, visitPurpose: val() }))
-          }
-          items={dropDownItems.visitPurposeItems}
-          setItems={newItems =>
-            setDropDownItems(prev => ({
-              ...prev,
-              visitPurposeItems: newItems,
-            }))
-          }
-          placeholder="Select Visit Purpose"
+        <Controller
+          name="visitPurpose"
+          control={control}
+          rules={{ required: 'Please Enter Visit Purpose' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomDropDown
+              value={value}
+              setValue={onChange}
+              onBlur={onBlur}
+              items={dropDownItems.visitPurposeItems}
+              setItems={newItems =>
+                setDropDownItems(prev => ({
+                  ...prev,
+                  visitPurposeItems: newItems,
+                }))
+              }
+              placeholder="Select Visit Purpose"
+            />
+          )}
         />
+        {errors.visitPurpose && (
+          <Text style={styles.error}>{errors.visitPurpose.message}</Text>
+        )}
       </View>
 
       <View style={[styles.dropdownContainer, { zIndex: 998, elevation: 998 }]}>
         <Text style={styles.label}>Mode of Travel</Text>
-        <CustomDropDown
-          value={dropdownData.travelMode}
-          setValue={val =>
-            setDropDownData(prev => ({ ...prev, travelMode: val() }))
-          }
-          items={dropDownItems.modeItems}
-          setItems={newItems =>
-            setDropDownItems(prev => ({ ...prev, modeItems: newItems }))
-          }
-          placeholder="Select Travel Mode"
+        <Controller
+          name="travelMode"
+          control={control}
+          rules={{ required: 'Please Enter Travel Mode' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomDropDown
+              value={value}
+              setValue={onChange}
+              onBlur={onBlur}
+              items={dropDownItems.modeItems}
+              setItems={newItems =>
+                setDropDownItems(prev => ({ ...prev, modeItems: newItems }))
+              }
+              placeholder="Select Travel Mode"
+            />
+          )}
         />
+        {errors.travelMode && (
+          <Text style={styles.error}>{errors.travelMode.message}</Text>
+        )}
       </View>
 
       <View style={styles.divider} />
 
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>Remarks</Text>
-        <TextInput
-          style={styles.remarksInput}
-          value={dropdownData.remarks}
-          onChangeText={text =>
-            setDropDownData(prev => ({ ...prev, remarks: text }))
-          }
-          multiline={true}
-          maxLength={200}
-          placeholder="Enter your remarks here..."
-          placeholderTextColor="#9CA3AF"
-          textAlignVertical="top"
-          scrollEnabled={true}
+        <Controller
+          control={control}
+          name="remarks"
+          render={({ field: { onChange, onBlur, value } }) => {
+            return (
+              <>
+                <TextInput
+                  style={styles.remarksInput}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  multiline={true}
+                  maxLength={200}
+                  placeholder="Enter your remarks here..."
+                  placeholderTextColor="#9CA3AF"
+                  textAlignVertical="top"
+                  scrollEnabled={true}
+                />
+                {/* <Text style={styles.characterCount}>
+                  {dropdownData.remarks.length}/200
+                </Text> */}
+              </>
+            );
+          }}
         />
-        <Text style={styles.characterCount}>
-          {dropdownData.remarks.length}/200
-        </Text>
       </View>
 
       <View style={styles.inputWrapper}>
@@ -206,7 +330,10 @@ const CreateForm = props => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleSubmit(handleSubmitForm)}
+      >
         <Text style={styles.submitButtonText}>Submit Travel Request</Text>
       </TouchableOpacity>
     </View>
@@ -368,5 +495,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: 0.5,
     textTransform: 'uppercase',
+  },
+  error: {
+    color: '#D22B2B',
+    paddingTop: 5,
   },
 });

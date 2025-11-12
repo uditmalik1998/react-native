@@ -6,15 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CreateScreen = () => {
   const [dropdownData, setDropDownData] = useState({
-    locationFrom: null,
-    locationTo: null,
-    budgetedAmount: '0',
-    assignedBy: null,
-    visitPurpose: null,
-    travelMode: null,
     fromDate: 'mm/dd/yyyy',
     toDate: 'mm/dd/yyyy',
-    remarks: '',
+
   });
   const [isDatePickershow, setIsDatePickerShow] = useState({
     fromDate: false,
@@ -42,7 +36,7 @@ const CreateScreen = () => {
       { label: 'Car', value: 'car' },
     ],
   });
-
+  const [imageUri, setImageUri] = useState("");
   const formatDate = date => {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
@@ -50,29 +44,31 @@ const CreateScreen = () => {
     return `${mm}/${dd}/${yyyy}`;
   };
 
-  const handleFromDate = (event, selectedDate) => {
-    setDropDownData(prev => ({ ...prev, fromDate: formatDate(selectedDate) }));
+  const handleFromDate = (fromData) => {
+    setDropDownData(prev => ({ ...prev, fromDate: formatDate(fromData) }));
     setIsDatePickerShow(prev => ({ ...prev, fromDate: false }));
-    console.log(event, selectedDate.toString(), dropdownData.fromDate);
   };
 
-  const handleToDate = (event, selectedDate) => {
-    setDropDownData(prev => ({ ...prev, toDate: formatDate(selectedDate) }));
+  const handleToDate = (toDate) => {
+    setDropDownData(prev => ({ ...prev, toDate: formatDate(toDate) }));
     setIsDatePickerShow(prev => ({ ...prev, toDate: false }));
-    console.log(event, selectedDate.toString(), dropdownData.toDate);
   };
 
   const handleDocumentSelection = async () => {
     try {
-      const response = await pick({ type: [types.images] });
+      const response = await pick({
+        type: [types.images],
+        allowMultiSelection: false,
+      });
+      setImageUri(response?.[0]);
       console.log(response);
     } catch (err) {
       console.error('Error While Taking File', err);
     }
   };
 
-  const handleSubmit = () => {
-    console.log(dropdownData, 'INDIA****');
+  const handleSubmit = (data) => {
+    console.log(formatDate(data.fromDate),formatDate(data.toDate), 'INDIA****');
   };
 
   return (
@@ -80,7 +76,7 @@ const CreateScreen = () => {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        nestedScrollEnabled={true} // 👈 important
+        nestedScrollEnabled={true}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.createWrapper}>
@@ -95,7 +91,7 @@ const CreateScreen = () => {
             handleFromDate={handleFromDate}
             handleToDate={handleToDate}
             handleDocumentSelection={handleDocumentSelection}
-            handleSubmit={handleSubmit}
+            handleSubmitForm={handleSubmit}
           />
         </View>
       </ScrollView>
