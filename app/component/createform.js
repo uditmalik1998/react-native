@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     minHeight: 56,
-    shadowColor: '#4F46E5',
+    shadowColor: '#D22B2B',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   currencySymbol: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#6366F1',
+    color: '#D22B2B',
     marginRight: 8,
   },
   textInput: {
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     minHeight: 56,
-    shadowColor: '#4F46E5',
+    shadowColor: '#D22B2B',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#1F2937'
+    color: '#1F2937',
   },
   divider: {
     height: 1,
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#1F2937',
     textAlignVertical: 'top',
-    shadowColor: '#4F46E5',
+    shadowColor: '#D22B2B',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -332,9 +332,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderStyle: 'dashed',
-    borderColor: '#C7D2FE',
+    borderColor: 'rgb(243, 186, 186)',
     borderRadius: 12,
-    backgroundColor: '#F5F7FF',
+    backgroundColor: 'rgb(250, 243, 243)',
     paddingVertical: 20,
     paddingHorizontal: 24,
   },
@@ -345,11 +345,11 @@ const styles = StyleSheet.create({
   fileButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#6366F1',
+    color: '#D22B2B',
     letterSpacing: 0.3,
   },
   submitButton: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#D22B2B',
     borderRadius: 12,
     paddingVertical: 18,
     paddingHorizontal: 24,

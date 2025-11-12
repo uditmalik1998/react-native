@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { types, pick } from '@react-native-documents/picker';
 import CreateForm from '../component/createform';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CreateScreen = () => {
   const [dropdownData, setDropDownData] = useState({
@@ -78,11 +79,13 @@ const CreateScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true} // 👈 important
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.createWrapper}>
           <CreateForm
+            style={{ zIndex: 2001 }}
             dropdownData={dropdownData}
             setDropDownData={setDropDownData}
             isDatePickershow={isDatePickershow}
@@ -110,11 +113,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  scrollContent: {
-    paddingBottom: 32,
-  },
   createWrapper: {
     paddingHorizontal: 20,
-    paddingTop: 20,
   },
 });
