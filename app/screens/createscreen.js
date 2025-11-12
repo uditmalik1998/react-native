@@ -36,7 +36,7 @@ const CreateScreen = () => {
       { label: 'Car', value: 'car' },
     ],
   });
-  const [imageUri, setImageUri] = useState("");
+  const [imageUri, setImageUri] = useState({});
   const formatDate = date => {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');

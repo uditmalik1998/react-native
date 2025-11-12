@@ -81,6 +81,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import NavigationStack from "./navigation/navigation";
 import { enableScreens } from 'react-native-screens';
+import 'react-native-gesture-handler';
 
 enableScreens();
 
