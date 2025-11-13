@@ -83,7 +83,6 @@ const CreateScreen = () => {
           <CreateForm
             style={{ zIndex: 2001 }}
             dropdownData={dropdownData}
-            setDropDownData={setDropDownData}
             isDatePickershow={isDatePickershow}
             setIsDatePickerShow={setIsDatePickerShow}
             dropDownItems={dropDownItems}

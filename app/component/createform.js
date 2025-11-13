@@ -12,7 +12,6 @@ import { useForm, Controller } from 'react-hook-form';
 const CreateForm = props => {
   const {
     dropdownData = {},
-    setDropDownData = () => {},
     isDatePickershow = {},
     setIsDatePickerShow = () => {},
     dropDownItems = {},
@@ -310,9 +309,6 @@ const CreateForm = props => {
                   textAlignVertical="top"
                   scrollEnabled={true}
                 />
-                {/* <Text style={styles.characterCount}>
-                  {dropdownData.remarks.length}/200
-                </Text> */}
               </>
             );
           }}

@@ -1,14 +1,21 @@
 import { Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CustomHeader = props => {
-  const { heading = '', iconName = 'pending-actions' } = props;
+interface ICustomHeader {
+  heading: string;
+  iconName: string;
+}
+const CustomHeader = (props: ICustomHeader) => {
+  const { heading = '', iconName = '' } = props;
   return (
     <View style={styles.headerContainer}>
       <View style={styles.iconWrapper}>
         {heading === 'Profile' ? (
           <FontIcon name={iconName} size={24} color="#FFFFFF" />
+        ) : heading === 'Create Request' ? (
+          <Ionicons size={24} name={iconName} color="#FFFFFF" />
         ) : (
           <Icon name={iconName} size={24} color="#FFFFFF" />
         )}
