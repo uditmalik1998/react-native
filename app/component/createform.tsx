@@ -30,6 +30,7 @@ interface ICreateForm {
   handleToDate: (toDate: Date) => void;
   handleDocumentSelection: () => void;
   handleSubmitForm: ({}: IHandleSubmit) => void;
+  apiError: string;
 }
 
 const CreateForm = (props: ICreateForm) => {
@@ -49,6 +50,7 @@ const CreateForm = (props: ICreateForm) => {
     handleToDate = () => {},
     handleDocumentSelection = () => {},
     handleSubmitForm = () => {},
+    apiError = '',
   } = props;
 
   useEffect(() => {
@@ -338,6 +340,8 @@ const CreateForm = (props: ICreateForm) => {
                 }))
               }
               placeholder="Select Travel Mode"
+              labelText="label"
+              valueText="value"
             />
           )}
         />
@@ -384,6 +388,7 @@ const CreateForm = (props: ICreateForm) => {
           <Text style={styles.fileButtonText}>Choose Files</Text>
         </TouchableOpacity>
       </View>
+      {apiError && <Text style={styles.error}>{apiError}</Text>}
 
       <TouchableOpacity
         style={styles.submitButton}

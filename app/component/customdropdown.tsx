@@ -1,9 +1,20 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ImageStyle } from 'react-native';
 
-const CustomDropDown = props => {
-  const [open, setOpen] = useState(false);
+interface ICustomDropDown{
+  value:string | null;
+  setValue:() => void;
+  items:any,
+  setItems:(val:any) => void;
+  placeholder:string;
+  onBlur:() => void;
+  labelText:string;
+  valueText:string;
+}
+
+const CustomDropDown = (props:ICustomDropDown) => {
+  const [open, setOpen] = useState<boolean>(false);
   const {
     value = null,
     setValue = () => {},
@@ -33,7 +44,8 @@ const CustomDropDown = props => {
         tickIconStyle={styles.tickIconStyle}
         searchTextInputStyle={styles.searchTxt}
         searchPlaceholderTextColor={'#9CA3AF'}
-        onBlur={onBlur}
+
+        onClose={onBlur}
         schema={{
           label: labelText,
           value: valueText,
@@ -94,10 +106,10 @@ const styles = StyleSheet.create({
   },
   arrowIconStyle: {
     tintColor: '#6366F1',
-  },
+  } as ImageStyle,
   tickIconStyle: {
     tintColor: '#6366F1',
-  },
+  } as ImageStyle,
   searchTxt: {
     borderColor: '#9CA3AF',
   },

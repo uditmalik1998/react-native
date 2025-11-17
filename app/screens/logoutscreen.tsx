@@ -4,11 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getItem, removeItem } from '../utils/AsyncStorage';
 import { useEffect } from 'react';
 
+interface INavigation {
+  replace: (str: string) => void;
+  navigate: (str: string) => void;
+}
+
 const Logout = () => {
-  const navigation = useNavigation();
+  const navigation: INavigation = useNavigation();
 
   useEffect(() => {
-    (async function(){
+    (async function () {
       const token = await getItem('token');
       console.log(token);
     })();

@@ -16,16 +16,28 @@ import { useNavigation } from '@react-navigation/native';
 import Font from 'react-native-vector-icons/FontAwesome';
 import { validateForm } from '../utils/commonfunctions';
 import { getItem, setItem } from '../utils/AsyncStorage';
+import { login } from '../api-manager/auth';
+
+interface IValues {
+  userId: string;
+  password: string;
+}
+
+interface IError {
+  userId: string;
+  password: string;
+  apiError: string;
+}
 
 const LoginScreen = () => {
-  const [values, setValues] = useState({ userId: '', password: '' });
-  const [error, setError] = useState({
+  const [values, setValues] = useState<IValues>({ userId: '', password: '' });
+  const [error, setError] = useState<IError>({
     userId: '',
     password: '',
     apiError: '',
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigation: any = useNavigation();
 
   useEffect(() => {
     (async function () {
@@ -37,7 +49,7 @@ const LoginScreen = () => {
   }, []);
 
   const handleClick = async () => {
-    setError({ userId: '', password: '' });
+    setError({ userId: '', password: '', apiError: '' });
     const isError = validateForm(values, setError);
     if (!isError) {
       try {
@@ -45,24 +57,22 @@ const LoginScreen = () => {
           code: values.userId,
           password: values.password,
         };
-        const data = await fetch(
-          'https://traveldesk.v2retail.com:5050/api/Auth/login',
-          {
-            method: 'post',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(payload),
-          },
-        );
+        const data:any = await login(payload);
 
         if (data.ok) {
           const json = await data.json();
           setItem('token', json?.access_Token);
+          setItem('employeeCode', json?.code);
+          setItem('name', json?.name);
+          setItem('email', json?.email);
+          setItem('designation', json?.designation);
+          setItem('department', json?.department);
           navigation.navigate('Main');
           return;
         }
         const error = await data.text();
         setError(prevState => ({ ...prevState, apiError: error }));
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
         setError(prevState => ({ ...prevState, apiError: err.message }));
       }
@@ -123,7 +133,6 @@ const LoginScreen = () => {
                   name={showPassword ? 'eye-slash' : 'eye'}
                   size={24}
                   color="#D22B2B"
-                  style={styles.eyeWrapper}
                 />
               </TouchableOpacity>
             </View>

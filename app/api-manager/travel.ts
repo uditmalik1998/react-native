@@ -18,8 +18,8 @@ export const createTravelRequest = async (payload: any) => {
       'https://traveldesk.v2retail.com:5050/api/TravelRequest',
       { method: 'POST', body: payload },
     );
-    const json = await data.json();
-    console.log(json);
+
+    return data;
   } catch (err) {
     console.error('Error while fetching...', err);
   }

@@ -56,6 +56,7 @@ const CreateScreen = () => {
     ],
   });
   const [imageUri, setImageUri] = useState({});
+  const [apiError, setApiError] = useState<string>('');
 
   const formatDate = (date: Date) => {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -88,21 +89,38 @@ const CreateScreen = () => {
   };
 
   const handleSubmit = async (data: IHandleSubmit) => {
+    const fromDateString = data.fromDate.toISOString();
+    const toDateString = data.toDate.toISOString();
+
     const payload = new FormData();
     payload.append('PurposeCode', data.visitPurpose());
     payload.append('ModeOfTravel', data.travelMode());
     payload.append('LocationFromCode', data.locationFrom());
     payload.append('LocationToCode', data.locationTo());
-    payload.append('VisitFromDate', data.fromDate);
-    payload.append('VisitToDate', data.toDate);
+    payload.append('VisitFromDate', fromDateString);
+    payload.append('VisitToDate', toDateString);
     payload.append('VisitAssignedBy', data.assignedBy());
-    payload.append('Remarks', data.remarks);
+    payload.append('Remarks', data.remarks || '');
     payload.append('TotalAmount', data.budgetedAmount);
+    // payload.append('EmployeeCode', 'V15048');
 
-    await createTravelRequest(payload);
-
-    console.log(payload, 'INDIA****');
-
+    try {
+      const response: any = await createTravelRequest(payload);
+      console.log(payload);
+      if (response.ok) {
+        setApiError('');
+        console.log(response, 'INDIA****');
+      } else {
+        const json = await response.json();
+        if (json.message) {
+          setApiError(json.message);
+        } else {
+          setApiError('Something went wrong');
+        }
+      }
+    } catch (err) {
+      console.error('Error while fetching...', err);
+    }
   };
 
   return (
@@ -124,6 +142,7 @@ const CreateScreen = () => {
             handleToDate={handleToDate}
             handleDocumentSelection={handleDocumentSelection}
             handleSubmitForm={handleSubmit}
+            apiError={apiError}
           />
         </View>
       </ScrollView>
