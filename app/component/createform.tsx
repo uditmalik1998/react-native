@@ -8,13 +8,42 @@ import {
 import CustomDropDown from './customdropdown';
 import CustomDatePicker from './customdatepicker';
 import { useForm, Controller } from 'react-hook-form';
+import { useEffect } from 'react';
+import { getAllEmployee } from '../api-manager/travel';
+import { getAllVisitPurpose } from '../api-manager/visitpurpose';
+import { storeLocation } from '../api-manager/storelocation';
+import { IHandleSubmit } from '../screens/createscreen';
 
-const CreateForm = props => {
+interface ICreateForm {
+  dropdownData: { fromDate: string; toDate: string };
+  isDatePickershow: { fromDate: boolean; toDate: boolean };
+  setIsDatePickerShow: ({}: any) => void;
+  dropDownItems: {
+    locationFromItems: [];
+    locationToItems: [];
+    assignedToItems: [];
+    visitPurposeItems: [];
+    modeItems: { label: string; value: string }[];
+  };
+  setDropDownItems: ({}: any) => void;
+  handleFromDate: (fromData: Date) => void;
+  handleToDate: (toDate: Date) => void;
+  handleDocumentSelection: () => void;
+  handleSubmitForm: ({}: IHandleSubmit) => void;
+}
+
+const CreateForm = (props: ICreateForm) => {
   const {
-    dropdownData = {},
-    isDatePickershow = {},
+    dropdownData = { fromDate: '', toDate: '' },
+    isDatePickershow = { fromDate: false, toDate: false },
     setIsDatePickerShow = () => {},
-    dropDownItems = {},
+    dropDownItems = {
+      locationFromItems: [],
+      locationToItems: [],
+      assignedToItems: [],
+      visitPurposeItems: [],
+      modeItems: [],
+    },
     setDropDownItems = () => {},
     handleFromDate = () => {},
     handleToDate = () => {},
@@ -22,11 +51,31 @@ const CreateForm = props => {
     handleSubmitForm = () => {},
   } = props;
 
+  useEffect(() => {
+    (async function () {
+      try {
+        const assignedTo = await getAllEmployee();
+        const visitPurpose = await getAllVisitPurpose();
+        const location = await storeLocation();
+
+        setDropDownItems((prev: any) => ({
+          ...prev,
+          assignedToItems: assignedTo,
+          visitPurposeItems: visitPurpose,
+          locationFromItems: location,
+          locationToItems: location,
+        }));
+      } catch (err) {
+        console.error('Get Employee Error', err);
+      }
+    })();
+  }, []);
+
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm();
+  }: any = useForm();
 
   return (
     <View style={styles.formContainer}>
@@ -46,13 +95,15 @@ const CreateForm = props => {
               setValue={onChange}
               onBlur={onBlur}
               items={dropDownItems.locationFromItems}
-              setItems={newItems =>
-                setDropDownItems(prev => ({
+              setItems={(newItems: any) =>
+                setDropDownItems((prev: any) => ({
                   ...prev,
                   locationFromItems: newItems,
                 }))
               }
               placeholder="Select Location From"
+              labelText="storeName"
+              valueText="code"
             />
           )}
         />
@@ -75,13 +126,15 @@ const CreateForm = props => {
               setValue={onChange}
               onBlur={onBlur}
               items={dropDownItems.locationToItems}
-              setItems={newItems =>
-                setDropDownItems(prev => ({
+              setItems={(newItems: any) =>
+                setDropDownItems((prev: any) => ({
                   ...prev,
                   locationFromItems: newItems,
                 }))
               }
               placeholder="Select Location To"
+              labelText="storeName"
+              valueText="code"
             />
           )}
         />
@@ -125,7 +178,7 @@ const CreateForm = props => {
           <TouchableOpacity
             style={styles.dateButton}
             onPress={() =>
-              setIsDatePickerShow(prev => ({ ...prev, fromDate: true }))
+              setIsDatePickerShow((prev: any) => ({ ...prev, fromDate: true }))
             }
           >
             <Text style={styles.calendarIcon}>📅</Text>
@@ -145,8 +198,8 @@ const CreateForm = props => {
                 {isDatePickershow.fromDate && (
                   <CustomDatePicker
                     value={value || new Date()}
-                    onChange={selectedDate => {
-                      onChange(selectedDate); 
+                    onChange={(selectedDate: Date) => {
+                      onChange(selectedDate);
                       handleFromDate(selectedDate);
                     }}
                     onBlur={onBlur}
@@ -165,7 +218,7 @@ const CreateForm = props => {
           <TouchableOpacity
             style={styles.dateButton}
             onPress={() =>
-              setIsDatePickerShow(prev => ({ ...prev, toDate: true }))
+              setIsDatePickerShow((prev: any) => ({ ...prev, toDate: true }))
             }
           >
             <Text style={styles.calendarIcon}>📅</Text>
@@ -187,9 +240,9 @@ const CreateForm = props => {
                 {isDatePickershow.toDate && (
                   <CustomDatePicker
                     value={value || new Date()}
-                    onChange={selectedDate => {
-                      onChange(selectedDate); 
-                      handleToDate(selectedDate); 
+                    onChange={(selectedDate: Date) => {
+                      onChange(selectedDate);
+                      handleToDate(selectedDate);
                     }}
                     onBlur={onBlur}
                   />
@@ -201,7 +254,6 @@ const CreateForm = props => {
             )}
           />
         </View>
-
       </View>
 
       <View style={styles.divider} />
@@ -221,13 +273,15 @@ const CreateForm = props => {
               setValue={onChange}
               items={dropDownItems.assignedToItems}
               onBlur={onBlur}
-              setItems={newItems =>
-                setDropDownItems(prev => ({
+              setItems={(newItems: any) =>
+                setDropDownItems((prev: any) => ({
                   ...prev,
                   assignedToItems: newItems,
                 }))
               }
               placeholder="Select Assigned By"
+              labelText="empName"
+              valueText="code"
             />
           )}
         />
@@ -248,13 +302,15 @@ const CreateForm = props => {
               setValue={onChange}
               onBlur={onBlur}
               items={dropDownItems.visitPurposeItems}
-              setItems={newItems =>
-                setDropDownItems(prev => ({
+              setItems={(newItems: any) =>
+                setDropDownItems((prev: any) => ({
                   ...prev,
                   visitPurposeItems: newItems,
                 }))
               }
               placeholder="Select Visit Purpose"
+              labelText="purposeName"
+              valueText="code"
             />
           )}
         />
@@ -275,8 +331,11 @@ const CreateForm = props => {
               setValue={onChange}
               onBlur={onBlur}
               items={dropDownItems.modeItems}
-              setItems={newItems =>
-                setDropDownItems(prev => ({ ...prev, modeItems: newItems }))
+              setItems={(newItems: any) =>
+                setDropDownItems((prev: any) => ({
+                  ...prev,
+                  modeItems: newItems,
+                }))
               }
               placeholder="Select Travel Mode"
             />

@@ -3,53 +3,73 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { types, pick } from '@react-native-documents/picker';
 import CreateForm from '../component/createform';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { createTravelRequest } from '../api-manager/travel';
+
+interface IDropDown {
+  fromDate: string;
+  toDate: string;
+}
+
+interface IDropDownItems {
+  locationFromItems: [];
+  locationToItems: [];
+  assignedToItems: [];
+  visitPurposeItems: [];
+  modeItems: { label: string; value: string }[];
+}
+
+export interface IHandleSubmit {
+  assignedBy: () => string;
+  budgetedAmount: string;
+  fromDate: Date;
+  locationFrom: () => string;
+  locationTo: () => string;
+  remarks: string;
+  toDate: Date;
+  travelMode: () => string;
+  visitPurpose: () => number;
+}
+
+interface IIsDatePickershow {
+  fromDate: boolean;
+  toDate: boolean;
+}
 
 const CreateScreen = () => {
-  const [dropdownData, setDropDownData] = useState({
+  const [dropdownData, setDropDownData] = useState<IDropDown>({
     fromDate: 'mm/dd/yyyy',
     toDate: 'mm/dd/yyyy',
-
   });
-  const [isDatePickershow, setIsDatePickerShow] = useState({
+  const [isDatePickershow, setIsDatePickerShow] = useState<IIsDatePickershow>({
     fromDate: false,
     toDate: false,
   });
 
-  const [dropDownItems, setDropDownItems] = useState({
-    locationFromItems: [
-      { label: 'GURAKHPUR_U114', value: 'U114' },
-      { label: 'GURAKHPUR_U115', value: 'U115' },
-      { label: 'GURAKHPUR_U116', value: 'U116' },
-    ],
-    locationToItems: [
-      { label: 'GURAKHPUR_U114', value: 'U114' },
-      { label: 'GURAKHPUR_U115', value: 'U115' },
-      { label: 'GURAKHPUR_U116', value: 'U116' },
-    ],
-    assignedToItems: [{ label: 'NIKHIL VIG', value: 'U114' }],
-    visitPurposeItems: [
-      { label: 'IT Work', value: 'it work' },
-      { label: 'Other Work', value: 'other work' },
-    ],
+  const [dropDownItems, setDropDownItems] = useState<IDropDownItems>({
+    locationFromItems: [],
+    locationToItems: [],
+    assignedToItems: [],
+    visitPurposeItems: [],
     modeItems: [
       { label: 'Bus', value: 'bus' },
       { label: 'Car', value: 'car' },
     ],
   });
   const [imageUri, setImageUri] = useState({});
-  const formatDate = date => {
+
+  const formatDate = (date: Date) => {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const yyyy = date.getFullYear();
     return `${mm}/${dd}/${yyyy}`;
   };
 
-  const handleFromDate = (fromData) => {
+  const handleFromDate = (fromData: Date) => {
     setDropDownData(prev => ({ ...prev, fromDate: formatDate(fromData) }));
     setIsDatePickerShow(prev => ({ ...prev, fromDate: false }));
   };
 
-  const handleToDate = (toDate) => {
+  const handleToDate = (toDate: Date) => {
     setDropDownData(prev => ({ ...prev, toDate: formatDate(toDate) }));
     setIsDatePickerShow(prev => ({ ...prev, toDate: false }));
   };
@@ -67,8 +87,22 @@ const CreateScreen = () => {
     }
   };
 
-  const handleSubmit = (data) => {
-    console.log(formatDate(data.fromDate),formatDate(data.toDate), 'INDIA****');
+  const handleSubmit = async (data: IHandleSubmit) => {
+    const payload = new FormData();
+    payload.append('PurposeCode', data.visitPurpose());
+    payload.append('ModeOfTravel', data.travelMode());
+    payload.append('LocationFromCode', data.locationFrom());
+    payload.append('LocationToCode', data.locationTo());
+    payload.append('VisitFromDate', data.fromDate);
+    payload.append('VisitToDate', data.toDate);
+    payload.append('VisitAssignedBy', data.assignedBy());
+    payload.append('Remarks', data.remarks);
+    payload.append('TotalAmount', data.budgetedAmount);
+
+    await createTravelRequest(payload);
+
+    console.log(payload, 'INDIA****');
+
   };
 
   return (
@@ -81,7 +115,6 @@ const CreateScreen = () => {
       >
         <View style={styles.createWrapper}>
           <CreateForm
-            style={{ zIndex: 2001 }}
             dropdownData={dropdownData}
             isDatePickershow={isDatePickershow}
             setIsDatePickerShow={setIsDatePickerShow}

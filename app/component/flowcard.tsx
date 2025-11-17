@@ -1,39 +1,46 @@
 import { Text, View, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const FlowCard = () => {
+interface IFlowItems {
+  id: number;
+  title: string;
+  value: number;
+}
+
+export interface IFlowCard {
+  id: number;
+  heading: string;
+  items: IFlowItems[];
+}
+
+const FlowCard = (props: IFlowCard) => {
+  const { heading = '', items = [] } = props;
   return (
     <View style={styles.flowCard}>
       <View style={styles.headingWrapper}>
-        <FontAwesome
+        {/* <FontAwesome
           style={styles.rupeeIcon}
           size={26}
           name="rupee"
           color="#D22B2B"
-        />
-        <Text style={styles.heading}>Bill Request Flow</Text>
+        /> */}
+        <Text style={styles.heading}>{heading}</Text>
       </View>
-      <View>
-        <View style={styles.txtWrapper}>
-          <Text style={styles.txt}>Under Manager</Text>
-          <Text style={styles.txt}>0</Text>
-        </View>
-        <View style={styles.progressBar}></View>
-      </View>
-      <View>
-        <View style={styles.txtWrapper}>
-          <Text style={styles.txt}>Under Manager</Text>
-          <Text style={styles.txt}>0</Text>
-        </View>
-        <View style={[styles.progressBar]}></View>
-      </View>
-      <View>
-        <View style={styles.txtWrapper}>
-          <Text style={styles.txt}>Under Manager</Text>
-          <Text style={styles.txt}>0</Text>
-        </View>
-        <View style={[styles.progressBar, styles.fillProgressBar]}></View>
-      </View>
+      {items?.length > 0 &&
+        items.map(item => (
+          <View key={item?.id}>
+            <View style={styles.txtWrapper}>
+              <Text style={styles.txt}>{item?.title}</Text>
+              <Text style={styles.txt}>{item?.value}</Text>
+            </View>
+            <View
+              style={[
+                styles.progressBar,
+                item?.value > 0 ? styles.fillProgressBar : '',
+              ]}
+            ></View>
+          </View>
+        ))}
     </View>
   );
 };

@@ -11,6 +11,8 @@ const CustomDropDown = props => {
     setItems = () => {},
     placeholder = 'Select an Item',
     onBlur = () => {},
+    labelText = 'label',
+    valueText = 'value',
   } = props;
   return (
     <View style={styles.wrapper}>
@@ -29,7 +31,15 @@ const CustomDropDown = props => {
         labelStyle={styles.labelStyle}
         arrowIconStyle={styles.arrowIconStyle}
         tickIconStyle={styles.tickIconStyle}
+        searchTextInputStyle={styles.searchTxt}
+        searchPlaceholderTextColor={'#9CA3AF'}
         onBlur={onBlur}
+        schema={{
+          label: labelText,
+          value: valueText,
+        }}
+        searchable={true}
+        searchPlaceholder="Search..."
       />
     </View>
   );
@@ -87,5 +97,8 @@ const styles = StyleSheet.create({
   },
   tickIconStyle: {
     tintColor: '#6366F1',
+  },
+  searchTxt: {
+    borderColor: '#9CA3AF',
   },
 });
