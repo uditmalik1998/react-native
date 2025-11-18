@@ -1,4 +1,4 @@
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker, { ListModeType } from 'react-native-dropdown-picker';
 import { useState } from 'react';
 import { StyleSheet, ImageStyle } from 'react-native';
 
@@ -11,6 +11,7 @@ interface ICustomDropDown {
   onBlur: () => void;
   labelText: string;
   valueText: string;
+  listMode: ListModeType;
 }
 
 const CustomDropDown = (props: ICustomDropDown) => {
@@ -24,6 +25,7 @@ const CustomDropDown = (props: ICustomDropDown) => {
     onBlur = () => {},
     labelText = 'label',
     valueText = 'value',
+    listMode = 'SCROLLVIEW',
   } = props;
   return (
     <>
@@ -45,20 +47,13 @@ const CustomDropDown = (props: ICustomDropDown) => {
         searchTextInputStyle={styles.searchTxt}
         searchPlaceholderTextColor={'#9CA3AF'}
         onClose={onBlur}
-        // schema={{
-        //   label: labelText,
-        //   value: valueText,
-        // }}
+        schema={{
+          label: labelText,
+          value: valueText,
+        }}
         searchable={true}
         searchPlaceholder="Search..."
-        listMode="FLATLIST"
-        // maxHeight={260}
-        // flatListProps={{
-        //   initialNumToRender: 20,
-        //   maxToRenderPerBatch: 20,
-        //   windowSize: 10,
-        //   keyboardShouldPersistTaps: 'handled',
-        // }}
+        listMode={listMode}
       />
     </>
   );
@@ -79,7 +74,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
-    marginBottom: 20,
   },
   dropdownContainer: {
     borderColor: '#E0E7FF',

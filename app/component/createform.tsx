@@ -58,25 +58,13 @@ const CreateForm = (props: ICreateForm) => {
         const assignedTo = await getAllEmployee();
         const visitPurpose = await getAllVisitPurpose();
         const location = await storeLocation();
-        assignedByRef.current = assignedTo.map((item: any) => ({
-          label: item.empName,
-          value: item.code,
-        }));
+        assignedByRef.current = assignedTo;
 
-        const modifiedVisitPurpose = visitPurpose.map((item: any) => ({
-          label: item.purposeName,
-          value: item.code,
-        }));
-
-        const modifiedLocation = location.map((item: any) => ({
-          label: item.storeName,
-          value: item.code,
-        }));
         setDropDownItems((prev: any) => ({
           ...prev,
-          visitPurposeItems: modifiedVisitPurpose,
-          locationFromItems: modifiedLocation,
-          locationToItems: modifiedLocation,
+          visitPurposeItems: visitPurpose,
+          locationFromItems: location,
+          locationToItems: location,
         }));
       } catch (err) {
         console.error('Get Employee Error', err);
@@ -114,12 +102,14 @@ const CreateForm = (props: ICreateForm) => {
             placeholder="Select Location From"
             labelText="storeName"
             valueText="code"
+            listMode="SCROLLVIEW"
           />
         )}
       />
       {errors.locationFrom && (
         <Text style={styles.error}>{errors.locationFrom.message}</Text>
       )}
+      <View style={styles.dropdownContainer}></View>
 
       <Text style={styles.label}>Location To</Text>
       <Controller
@@ -141,12 +131,14 @@ const CreateForm = (props: ICreateForm) => {
             placeholder="Select Location To"
             labelText="storeName"
             valueText="code"
+            listMode="SCROLLVIEW"
           />
         )}
       />
       {errors.locationTo && (
         <Text style={styles.error}>{errors.locationTo.message}</Text>
       )}
+      <View style={styles.dropdownContainer}></View>
 
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>Budgeted Amount</Text>
@@ -281,12 +273,14 @@ const CreateForm = (props: ICreateForm) => {
             placeholder="Select Assigned By"
             labelText="empName"
             valueText="code"
+            listMode="MODAL"
           />
         )}
       />
       {errors.assignedBy && (
         <Text style={styles.error}>{errors.assignedBy.message}</Text>
       )}
+      <View style={styles.dropdownContainer}></View>
 
       <Text style={styles.label}>Visit Purpose</Text>
       <Controller
@@ -308,12 +302,14 @@ const CreateForm = (props: ICreateForm) => {
             placeholder="Select Visit Purpose"
             labelText="purposeName"
             valueText="code"
+            listMode="SCROLLVIEW"
           />
         )}
       />
       {errors.visitPurpose && (
         <Text style={styles.error}>{errors.visitPurpose.message}</Text>
       )}
+      <View style={styles.dropdownContainer}></View>
 
       <Text style={styles.label}>Mode of Travel</Text>
       <Controller
@@ -335,12 +331,14 @@ const CreateForm = (props: ICreateForm) => {
             placeholder="Select Travel Mode"
             labelText="label"
             valueText="value"
+            listMode="SCROLLVIEW"
           />
         )}
       />
       {errors.travelMode && (
         <Text style={styles.error}>{errors.travelMode.message}</Text>
       )}
+      <View style={styles.dropdownContainer}></View>
 
       <View style={styles.divider} />
 

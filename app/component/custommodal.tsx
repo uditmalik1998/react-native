@@ -1,6 +1,13 @@
+import { ReactNode } from 'react';
 import { Modal } from 'react-native';
 
-const CustomModal = props => {
+interface IModal {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+const CustomModal = (props: IModal) => {
   const { open = false, onClose = () => {} } = props;
   return (
     <Modal
@@ -8,7 +15,9 @@ const CustomModal = props => {
       transparent={true}
       visible={open}
       onRequestClose={onClose}
-    >{props.children}</Modal>
+    >
+      {props.children}
+    </Modal>
   );
 };
 

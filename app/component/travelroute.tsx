@@ -1,13 +1,38 @@
 import { Text, View, StyleSheet } from 'react-native';
 
-const data = [
-  { id: 1, heading: 'Left Head Office', isActive: true },
-  { id: 2, heading: 'Boarded Transport', isActive: false },
-  { id: 3, heading: 'Arrived at Destination', isActive: false },
-  { id: 4, heading: 'Check into Accomodation', isActive: false },
-  { id: 5, heading: 'Completed Visit', isActive: false },
-];
-const TravelRoute = () => {
+
+
+interface ITravelRoute{
+ type:string;
+}
+
+const TravelRoute = (props: ITravelRoute) => {
+  
+  const data = [
+    { id: 1, heading: 'Left Head Office', isActive: true },
+    {
+      id: 2,
+      heading: 'Boarded Transport',
+      isActive: props?.type === 'Completed',
+    },
+    {
+      id: 3,
+      heading: 'Arrived at Destination',
+      isActive: props?.type === 'Completed',
+    },
+    {
+      id: 4,
+      heading: 'Check into Accomodation',
+      isActive: props?.type === 'Completed',
+    },
+    {
+      id: 5,
+      heading: 'Completed Visit',
+      isActive: props?.type === 'Completed',
+    },
+  ];
+
+
   return (
     <View style={styles.travelWrapper}>
       {data?.length > 0 &&

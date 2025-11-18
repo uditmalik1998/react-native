@@ -6,16 +6,29 @@ import Feather from 'react-native-vector-icons/Feather';
 import CustomModal from './custommodal';
 import TravelRoute from './travelroute';
 
-const Card = props => {
+interface ICard {
+  type: string;
+  workpurpose: string;
+  traveldateTo: string;
+  traveldateFrom: string;
+  from: string;
+  to: string;
+  assignedby: string;
+  setIsOpen?: (arg: boolean) => void;
+  isOpen?: boolean;
+  isModalOpen?:boolean;
+}
+
+const Card = (props: ICard) => {
   const {
     type = '',
     workpurpose = '',
-    traveldate = '',
-    traveldateto = '',
+    traveldateTo = '',
+    traveldateFrom = '',
     from = '',
     to = '',
     assignedby = '',
-  } = props?.data;
+  } = props;
   const { isOpen = false, setIsOpen = () => {} } = props;
 
   const color = getTypeColor(type);
@@ -44,14 +57,14 @@ const Card = props => {
         <View style={[styles.txtContainer, styles.details]}>
           <View style={styles.calanderWrapper}>
             <Font name="calendar-o" size={18} color="#D22B2B" />
-            <Text style={styles.dateTxt}>{traveldate}</Text>
+            <Text style={styles.dateTxt}>{traveldateTo}</Text>
           </View>
           {props?.isModalOpen ? (
             <>
               <Feather name="arrow-right" size={24} color="#D22B2B" />
               <View style={styles.calanderWrapper}>
                 <Font name="calendar-o" size={18} color="#D22B2B" />
-                <Text style={styles.dateTxt}>{traveldateto}</Text>
+                <Text style={styles.dateTxt}>{traveldateFrom}</Text>
               </View>
             </>
           ) : null}
@@ -91,8 +104,17 @@ const Card = props => {
       {isOpen && (
         <CustomModal onClose={() => setIsOpen(!isOpen)} open={isOpen}>
           <View style={styles.modalWrapper}>
-            <Card data={props?.data} isModalOpen={true} />
-            <TravelRoute />
+            <Card
+              workpurpose={workpurpose}
+              traveldateTo={traveldateTo}
+              traveldateFrom={traveldateFrom}
+              from={from}
+              to={to}
+              assignedby={assignedby}
+              isModalOpen={true}
+              type={type}
+            />
+            <TravelRoute type={type}/>
           </View>
         </CustomModal>
       )}
