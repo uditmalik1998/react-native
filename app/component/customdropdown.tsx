@@ -1,19 +1,19 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from 'react';
-import { View, StyleSheet, ImageStyle } from 'react-native';
+import { StyleSheet, ImageStyle } from 'react-native';
 
-interface ICustomDropDown{
-  value:string | null;
-  setValue:() => void;
-  items:any,
-  setItems:(val:any) => void;
-  placeholder:string;
-  onBlur:() => void;
-  labelText:string;
-  valueText:string;
+interface ICustomDropDown {
+  value: string | null;
+  setValue: () => void;
+  items: any;
+  setItems: (val: any) => void;
+  placeholder: string;
+  onBlur: () => void;
+  labelText: string;
+  valueText: string;
 }
 
-const CustomDropDown = (props:ICustomDropDown) => {
+const CustomDropDown = (props: ICustomDropDown) => {
   const [open, setOpen] = useState<boolean>(false);
   const {
     value = null,
@@ -26,7 +26,7 @@ const CustomDropDown = (props:ICustomDropDown) => {
     valueText = 'value',
   } = props;
   return (
-    <View style={styles.wrapper}>
+    <>
       <DropDownPicker
         placeholder={placeholder}
         open={open}
@@ -44,25 +44,29 @@ const CustomDropDown = (props:ICustomDropDown) => {
         tickIconStyle={styles.tickIconStyle}
         searchTextInputStyle={styles.searchTxt}
         searchPlaceholderTextColor={'#9CA3AF'}
-
         onClose={onBlur}
-        schema={{
-          label: labelText,
-          value: valueText,
-        }}
+        // schema={{
+        //   label: labelText,
+        //   value: valueText,
+        // }}
         searchable={true}
         searchPlaceholder="Search..."
+        listMode="FLATLIST"
+        // maxHeight={260}
+        // flatListProps={{
+        //   initialNumToRender: 20,
+        //   maxToRenderPerBatch: 20,
+        //   windowSize: 10,
+        //   keyboardShouldPersistTaps: 'handled',
+        // }}
       />
-    </View>
+    </>
   );
 };
 
 export default CustomDropDown;
 
 const styles = StyleSheet.create({
-  wrapper: {
-    zIndex: 1000,
-  },
   dropdown: {
     borderColor: '#E0E7FF',
     borderWidth: 1.5,
@@ -75,6 +79,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
+    marginBottom: 20,
   },
   dropdownContainer: {
     borderColor: '#E0E7FF',

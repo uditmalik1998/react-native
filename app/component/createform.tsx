@@ -8,7 +8,7 @@ import {
 import CustomDropDown from './customdropdown';
 import CustomDatePicker from './customdatepicker';
 import { useForm, Controller } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { getAllEmployee } from '../api-manager/travel';
 import { getAllVisitPurpose } from '../api-manager/visitpurpose';
 import { storeLocation } from '../api-manager/storelocation';
@@ -21,7 +21,6 @@ interface ICreateForm {
   dropDownItems: {
     locationFromItems: [];
     locationToItems: [];
-    assignedToItems: [];
     visitPurposeItems: [];
     modeItems: { label: string; value: string }[];
   };
@@ -34,6 +33,7 @@ interface ICreateForm {
 }
 
 const CreateForm = (props: ICreateForm) => {
+  const assignedByRef = useRef([]);
   const {
     dropdownData = { fromDate: '', toDate: '' },
     isDatePickershow = { fromDate: false, toDate: false },
@@ -41,7 +41,6 @@ const CreateForm = (props: ICreateForm) => {
     dropDownItems = {
       locationFromItems: [],
       locationToItems: [],
-      assignedToItems: [],
       visitPurposeItems: [],
       modeItems: [],
     },
@@ -59,13 +58,25 @@ const CreateForm = (props: ICreateForm) => {
         const assignedTo = await getAllEmployee();
         const visitPurpose = await getAllVisitPurpose();
         const location = await storeLocation();
+        assignedByRef.current = assignedTo.map((item: any) => ({
+          label: item.empName,
+          value: item.code,
+        }));
 
+        const modifiedVisitPurpose = visitPurpose.map((item: any) => ({
+          label: item.purposeName,
+          value: item.code,
+        }));
+
+        const modifiedLocation = location.map((item: any) => ({
+          label: item.storeName,
+          value: item.code,
+        }));
         setDropDownItems((prev: any) => ({
           ...prev,
-          assignedToItems: assignedTo,
-          visitPurposeItems: visitPurpose,
-          locationFromItems: location,
-          locationToItems: location,
+          visitPurposeItems: modifiedVisitPurpose,
+          locationFromItems: modifiedLocation,
+          locationToItems: modifiedLocation,
         }));
       } catch (err) {
         console.error('Get Employee Error', err);
@@ -83,67 +94,59 @@ const CreateForm = (props: ICreateForm) => {
     <View style={styles.formContainer}>
       <Text style={styles.sectionTitle}>Travel Details</Text>
 
-      <View
-        style={[styles.dropdownContainer, { zIndex: 2000, elevation: 2000 }]}
-      >
-        <Text style={styles.label}>Location From</Text>
-        <Controller
-          control={control}
-          name="locationFrom"
-          rules={{ required: 'Please select the location From' }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomDropDown
-              value={value}
-              setValue={onChange}
-              onBlur={onBlur}
-              items={dropDownItems.locationFromItems}
-              setItems={(newItems: any) =>
-                setDropDownItems((prev: any) => ({
-                  ...prev,
-                  locationFromItems: newItems,
-                }))
-              }
-              placeholder="Select Location From"
-              labelText="storeName"
-              valueText="code"
-            />
-          )}
-        />
-        {errors.locationFrom && (
-          <Text style={styles.error}>{errors.locationFrom.message}</Text>
+      <Text style={styles.label}>Location From</Text>
+      <Controller
+        control={control}
+        name="locationFrom"
+        rules={{ required: 'Please select the location From' }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <CustomDropDown
+            value={value}
+            setValue={onChange}
+            onBlur={onBlur}
+            items={dropDownItems.locationFromItems}
+            setItems={(newItems: any) =>
+              setDropDownItems((prev: any) => ({
+                ...prev,
+                locationFromItems: newItems,
+              }))
+            }
+            placeholder="Select Location From"
+            labelText="storeName"
+            valueText="code"
+          />
         )}
-      </View>
+      />
+      {errors.locationFrom && (
+        <Text style={styles.error}>{errors.locationFrom.message}</Text>
+      )}
 
-      <View
-        style={[styles.dropdownContainer, { zIndex: 1000, elevation: 1000 }]}
-      >
-        <Text style={styles.label}>Location To</Text>
-        <Controller
-          control={control}
-          name="locationTo"
-          rules={{ required: 'Please Select Location To' }}
-          render={({ field: { onBlur, onChange, value } }) => (
-            <CustomDropDown
-              value={value}
-              setValue={onChange}
-              onBlur={onBlur}
-              items={dropDownItems.locationToItems}
-              setItems={(newItems: any) =>
-                setDropDownItems((prev: any) => ({
-                  ...prev,
-                  locationFromItems: newItems,
-                }))
-              }
-              placeholder="Select Location To"
-              labelText="storeName"
-              valueText="code"
-            />
-          )}
-        />
-        {errors.locationTo && (
-          <Text style={styles.error}>{errors.locationTo.message}</Text>
+      <Text style={styles.label}>Location To</Text>
+      <Controller
+        control={control}
+        name="locationTo"
+        rules={{ required: 'Please Select Location To' }}
+        render={({ field: { onBlur, onChange, value } }) => (
+          <CustomDropDown
+            value={value}
+            setValue={onChange}
+            onBlur={onBlur}
+            items={dropDownItems.locationToItems}
+            setItems={(newItems: any) =>
+              setDropDownItems((prev: any) => ({
+                ...prev,
+                locationToItems: newItems,
+              }))
+            }
+            placeholder="Select Location To"
+            labelText="storeName"
+            valueText="code"
+          />
         )}
-      </View>
+      />
+      {errors.locationTo && (
+        <Text style={styles.error}>{errors.locationTo.message}</Text>
+      )}
 
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>Budgeted Amount</Text>
@@ -261,94 +264,83 @@ const CreateForm = (props: ICreateForm) => {
       <View style={styles.divider} />
       <Text style={styles.sectionTitle}>Assignment Details</Text>
 
-      <View
-        style={[styles.dropdownContainer, { zIndex: 1000, elevation: 1000 }]}
-      >
-        <Text style={styles.label}>Assigned By</Text>
-        <Controller
-          name="assignedBy"
-          control={control}
-          rules={{ required: 'Please Enter Assigned By' }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomDropDown
-              value={value}
-              setValue={onChange}
-              items={dropDownItems.assignedToItems}
-              onBlur={onBlur}
-              setItems={(newItems: any) =>
-                setDropDownItems((prev: any) => ({
-                  ...prev,
-                  assignedToItems: newItems,
-                }))
-              }
-              placeholder="Select Assigned By"
-              labelText="empName"
-              valueText="code"
-            />
-          )}
-        />
-        {errors.assignedBy && (
-          <Text style={styles.error}>{errors.assignedBy.message}</Text>
+      <Text style={styles.label}>Assigned By</Text>
+      <Controller
+        name="assignedBy"
+        control={control}
+        rules={{ required: 'Please Enter Assigned By' }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <CustomDropDown
+            value={value}
+            setValue={onChange}
+            items={assignedByRef.current}
+            onBlur={onBlur}
+            setItems={(newItems: any) => {
+              assignedByRef.current = newItems;
+            }}
+            placeholder="Select Assigned By"
+            labelText="empName"
+            valueText="code"
+          />
         )}
-      </View>
+      />
+      {errors.assignedBy && (
+        <Text style={styles.error}>{errors.assignedBy.message}</Text>
+      )}
 
-      <View style={[styles.dropdownContainer, { zIndex: 999, elevation: 999 }]}>
-        <Text style={styles.label}>Visit Purpose</Text>
-        <Controller
-          name="visitPurpose"
-          control={control}
-          rules={{ required: 'Please Enter Visit Purpose' }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomDropDown
-              value={value}
-              setValue={onChange}
-              onBlur={onBlur}
-              items={dropDownItems.visitPurposeItems}
-              setItems={(newItems: any) =>
-                setDropDownItems((prev: any) => ({
-                  ...prev,
-                  visitPurposeItems: newItems,
-                }))
-              }
-              placeholder="Select Visit Purpose"
-              labelText="purposeName"
-              valueText="code"
-            />
-          )}
-        />
-        {errors.visitPurpose && (
-          <Text style={styles.error}>{errors.visitPurpose.message}</Text>
+      <Text style={styles.label}>Visit Purpose</Text>
+      <Controller
+        name="visitPurpose"
+        control={control}
+        rules={{ required: 'Please Enter Visit Purpose' }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <CustomDropDown
+            value={value}
+            setValue={onChange}
+            onBlur={onBlur}
+            items={dropDownItems.visitPurposeItems}
+            setItems={(newItems: any) =>
+              setDropDownItems((prev: any) => ({
+                ...prev,
+                visitPurposeItems: newItems,
+              }))
+            }
+            placeholder="Select Visit Purpose"
+            labelText="purposeName"
+            valueText="code"
+          />
         )}
-      </View>
+      />
+      {errors.visitPurpose && (
+        <Text style={styles.error}>{errors.visitPurpose.message}</Text>
+      )}
 
-      <View style={[styles.dropdownContainer, { zIndex: 998, elevation: 998 }]}>
-        <Text style={styles.label}>Mode of Travel</Text>
-        <Controller
-          name="travelMode"
-          control={control}
-          rules={{ required: 'Please Enter Travel Mode' }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomDropDown
-              value={value}
-              setValue={onChange}
-              onBlur={onBlur}
-              items={dropDownItems.modeItems}
-              setItems={(newItems: any) =>
-                setDropDownItems((prev: any) => ({
-                  ...prev,
-                  modeItems: newItems,
-                }))
-              }
-              placeholder="Select Travel Mode"
-              labelText="label"
-              valueText="value"
-            />
-          )}
-        />
-        {errors.travelMode && (
-          <Text style={styles.error}>{errors.travelMode.message}</Text>
+      <Text style={styles.label}>Mode of Travel</Text>
+      <Controller
+        name="travelMode"
+        control={control}
+        rules={{ required: 'Please Enter Travel Mode' }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <CustomDropDown
+            value={value}
+            setValue={onChange}
+            onBlur={onBlur}
+            items={dropDownItems.modeItems}
+            setItems={(newItems: any) =>
+              setDropDownItems((prev: any) => ({
+                ...prev,
+                modeItems: newItems,
+              }))
+            }
+            placeholder="Select Travel Mode"
+            labelText="label"
+            valueText="value"
+          />
         )}
-      </View>
+      />
+      {errors.travelMode && (
+        <Text style={styles.error}>{errors.travelMode.message}</Text>
+      )}
 
       <View style={styles.divider} />
 

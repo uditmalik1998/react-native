@@ -106,7 +106,6 @@ const CreateScreen = () => {
 
     try {
       const response: any = await createTravelRequest(payload);
-      console.log(payload);
       if (response.ok) {
         setApiError('');
         console.log(response, 'INDIA****');
@@ -128,8 +127,8 @@ const CreateScreen = () => {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        nestedScrollEnabled={true}
         keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
       >
         <View style={styles.createWrapper}>
           <CreateForm
