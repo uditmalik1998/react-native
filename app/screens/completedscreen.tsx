@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import CardList from '../component/cardlist';
 import { View } from 'react-native';
 import { getTravelRequestMy } from '../api-manager/travel';
+import { getItem } from '../utils/AsyncStorage';
 
 const CompletedScreen = () => {
   const [completeDetails, setCompleteDetails] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getTravelRequestMy('V24565');
+      const empCode = await getItem('employeeCode');
+      const data = await getTravelRequestMy(empCode);
       const filterCompleteData = data.filter(
         (item: any) =>
           item?.approvalStatusCodeNavigation?.statusName === 'Approved',

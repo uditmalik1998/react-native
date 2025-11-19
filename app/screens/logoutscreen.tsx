@@ -12,13 +12,6 @@ interface INavigation {
 const Logout = () => {
   const navigation: INavigation = useNavigation();
 
-  useEffect(() => {
-    (async function () {
-      const token = await getItem('token');
-      console.log(token);
-    })();
-  }, []);
-
   const handleLogout = async () => {
     await removeItem('token');
     navigation.replace('Login');

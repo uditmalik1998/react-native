@@ -4,6 +4,7 @@ import { types, pick } from '@react-native-documents/picker';
 import CreateForm from '../component/createform';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createTravelRequest } from '../api-manager/travel';
+import { getItem } from '../utils/AsyncStorage';
 
 interface IDropDown {
   fromDate: string;
@@ -82,7 +83,6 @@ const CreateScreen = () => {
         allowMultiSelection: false,
       });
       setImageUri(response?.[0]);
-      console.log(response);
     } catch (err) {
       console.error('Error While Taking File', err);
     }
@@ -91,6 +91,7 @@ const CreateScreen = () => {
   const handleSubmit = async (data: IHandleSubmit) => {
     const fromDateString = data.fromDate.toISOString();
     const toDateString = data.toDate.toISOString();
+    const empCode = await getItem('employeeCode');
 
     const payload = new FormData();
     payload.append('PurposeCode', data.visitPurpose());
@@ -102,13 +103,12 @@ const CreateScreen = () => {
     payload.append('VisitAssignedBy', data.assignedBy());
     payload.append('Remarks', data.remarks || '');
     payload.append('TotalAmount', data.budgetedAmount);
-    // payload.append('EmployeeCode', 'V15048');
+    payload.append('EmployeeCode', empCode);
 
     try {
       const response: any = await createTravelRequest(payload);
       if (response.ok) {
         setApiError('');
-        console.log(response, 'INDIA****');
       } else {
         const json = await response.json();
         if (json.message) {

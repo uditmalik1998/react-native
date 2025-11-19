@@ -1,6 +1,7 @@
 import { format, parseISO } from 'date-fns';
 import { getBillRequestMy } from '../api-manager/bill';
 import { getTravelRequestMy } from '../api-manager/travel';
+import { getItem } from './AsyncStorage';
 
 export const getTypeColor = type => {
   switch (type.toLowerCase()) {
@@ -60,7 +61,8 @@ export const validateForm = (values, setError) => {
 };
 
 export const getTravelRequestDetails = async () => {
-  const data = await getTravelRequestMy('V24565');
+  const empCode = await getItem('employeeCode');
+  const data = await getTravelRequestMy(empCode);
 
   let pending = 0,
     totalTravelRequests = data?.length,
@@ -107,7 +109,9 @@ export const getTravelRequestDetails = async () => {
 
 export const getBillRequestDetails = async () => {
   try {
-    const data = await getBillRequestMy('V24565');
+     const empCode = await getItem('employeeCode');
+    //  employeeCode = 'V24565';
+    const data = await getBillRequestMy(empCode);
     let pendingBill = 0,
       totalBillRequest = data?.length,
       rejectedBill = 0,
