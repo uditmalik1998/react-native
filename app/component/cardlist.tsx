@@ -1,11 +1,10 @@
 import { FlatList } from 'react-native';
 import Card from './card';
-import { useState } from 'react';
 
 interface ICardList {
   type: string;
   data: {
-    id:number,
+    id: number;
     visitFromDate: string;
     visitToDate: string;
     visitAssignedByNavigation: { empName: string };
@@ -16,9 +15,7 @@ interface ICardList {
 }
 
 const CardList = (props: ICardList) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { data = [], type = '' } = props;
- 
   return (
     <FlatList
       data={data}
@@ -32,8 +29,7 @@ const CardList = (props: ICardList) => {
             workpurpose={item?.item?.purposeCodeNavigation?.purposeName}
             traveldateTo={item?.item?.visitFromDate}
             traveldateFrom={item?.item?.visitToDate}
-            setIsOpen={setIsOpen}
-            isOpen={isOpen}
+        
           />
         );
       }}
