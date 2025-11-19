@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import Font from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -24,7 +24,6 @@ const ModalCard = (props: IModalCard) => {
     to = '',
     assignedby = '',
   } = props;
-
 
   return (
     <>
@@ -57,7 +56,13 @@ const ModalCard = (props: IModalCard) => {
             </View>
             <View>
               <Text style={styles.txtBold}>From:</Text>
-              <Text style={styles.assignedTxt}>{from}</Text>
+              <Text
+                style={[styles.assignedTxt, styles.assignedTxtFrom]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {from}
+              </Text>
             </View>
           </View>
           <Feather name="arrow-right" size={24} color="#D22B2B" />
@@ -67,7 +72,13 @@ const ModalCard = (props: IModalCard) => {
             </View>
             <View>
               <Text style={styles.txtBold}>To: </Text>
-              <Text style={styles.assignedTxt}>{to}</Text>
+              <Text
+                style={[styles.assignedTxt, styles.assignedTxtFrom]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {to}
+              </Text>
             </View>
           </View>
         </View>
@@ -141,6 +152,9 @@ const styles = StyleSheet.create({
   },
   assignedTxt: {
     fontWeight: '600',
+  },
+  assignedTxtFrom: {
+    width: 110,
   },
   lIconWrapper: {
     backgroundColor: '#D22B2B',

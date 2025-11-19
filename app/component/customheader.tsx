@@ -6,20 +6,37 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 interface ICustomHeader {
   heading: string;
   iconName: string;
+  isIconShow?: boolean;
 }
 const CustomHeader = (props: ICustomHeader) => {
-  const { heading = '', iconName = '' } = props;
+  const { heading = '', iconName = '', isIconShow = true } = props;
+
+  const headerIcon = (text: string) => {
+    console.log(text);
+    switch (text) {
+      case 'Profile':
+        return <FontIcon name={iconName} size={24} color="#FFFFFF" />;
+      case 'Create Request':
+        return <Ionicons size={24} name={iconName} color="#FFFFFF" />;
+      default:
+        return <Icon name={iconName} size={24} color="#FFFFFF" />;
+    }
+  };
+
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.iconWrapper}>
-        {heading === 'Profile' ? (
+      {isIconShow ? (
+        <View style={styles.iconWrapper}>
+          {/* {heading === 'Profile' ? (
           <FontIcon name={iconName} size={24} color="#FFFFFF" />
         ) : heading === 'Create Request' ? (
           <Ionicons size={24} name={iconName} color="#FFFFFF" />
         ) : (
           <Icon name={iconName} size={24} color="#FFFFFF" />
-        )}
-      </View>
+        )} */}
+          {headerIcon(heading)}
+        </View>
+      ) : null}
       <View>
         <Text style={styles.headerText}>{heading}</Text>
       </View>

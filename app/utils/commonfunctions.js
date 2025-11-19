@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns';
 import { getBillRequestMy } from '../api-manager/bill';
 import { getTravelRequestMy } from '../api-manager/travel';
 
@@ -153,5 +154,16 @@ export const getBillRequestDetails = async () => {
     };
   } catch (err) {
     console.error(err);
+  }
+};
+
+export const formateApiDate = date => {
+  try {
+    const dateObject = parseISO(date) || new Date();
+    const formateDate = format(dateObject, 'd MMMM yyyy');
+    return formateDate;
+  } catch (err) {
+    console.error('Error while setting Date', err);
+    return ""
   }
 };

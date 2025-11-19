@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { getTypeColor } from '../utils/commonfunctions';
+import { formateApiDate, getTypeColor } from '../utils/commonfunctions';
 import Font from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -15,7 +15,6 @@ interface ICard {
   from: string;
   to: string;
   assignedby: string;
-  isModalOpen?: boolean;
 }
 
 const Card = (props: ICard) => {
@@ -30,7 +29,8 @@ const Card = (props: ICard) => {
   } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const color = getTypeColor(type);
-
+  const fromFormateDate = formateApiDate(traveldateFrom);
+  const toFormateDate = formateApiDate(traveldateTo);
   return (
     <>
       <TouchableOpacity
@@ -45,29 +45,19 @@ const Card = (props: ICard) => {
               {workpurpose}
             </Text>
           </View>
-          {props?.isModalOpen ? null : (
-            <View>
-              <Text style={[styles.txtBold, styles.highLight, color]}>
-                {type}
-              </Text>
-            </View>
-          )}
+
+          <View>
+            <Text style={[styles.txtBold, styles.highLight, color]}>
+              {type}
+            </Text>
+          </View>
         </View>
 
         <View style={[styles.txtContainer, styles.details]}>
           <View style={styles.calanderWrapper}>
             <Font name="calendar-o" size={18} color="#D22B2B" />
-            <Text style={styles.dateTxt}>{traveldateTo}</Text>
+            <Text style={styles.dateTxt}>{toFormateDate}</Text>
           </View>
-          {props?.isModalOpen ? (
-            <>
-              <Feather name="arrow-right" size={24} color="#D22B2B" />
-              <View style={styles.calanderWrapper}>
-                <Font name="calendar-o" size={18} color="#D22B2B" />
-                <Text style={styles.dateTxt}>{traveldateFrom}</Text>
-              </View>
-            </>
-          ) : null}
         </View>
 
         <View style={[styles.txtContainer, styles.details]}>
@@ -77,7 +67,13 @@ const Card = (props: ICard) => {
             </View>
             <View>
               <Text style={styles.txtBold}>From:</Text>
-              <Text style={styles.assignedTxt}>{from}</Text>
+              <Text
+                style={[styles.assignedTxt, styles.assignedTxtFrom]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {from}
+              </Text>
             </View>
           </View>
           <Feather name="arrow-right" size={24} color="#D22B2B" />
@@ -87,7 +83,13 @@ const Card = (props: ICard) => {
             </View>
             <View>
               <Text style={styles.txtBold}>To: </Text>
-              <Text style={styles.assignedTxt}>{to}</Text>
+              <Text
+                style={[styles.assignedTxt, styles.assignedTxtFrom]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {to}
+              </Text>
             </View>
           </View>
         </View>
@@ -106,8 +108,8 @@ const Card = (props: ICard) => {
           <View style={styles.modalWrapper}>
             <ModalCard
               workpurpose={workpurpose}
-              traveldateTo={traveldateTo}
-              traveldateFrom={traveldateFrom}
+              traveldateTo={toFormateDate}
+              traveldateFrom={fromFormateDate}
               from={from}
               to={to}
               assignedby={assignedby}
@@ -175,6 +177,9 @@ const styles = StyleSheet.create({
   },
   assignedTxt: {
     fontWeight: '600',
+  },
+  assignedTxtFrom: {
+    width: 110,
   },
   lIconWrapper: {
     backgroundColor: '#D22B2B',
