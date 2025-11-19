@@ -1,18 +1,25 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { View, StyleSheet } from 'react-native';
 
-const CustomDatePicker = props => {
+interface ICustomDatePicker {
+  value: Date;
+  onChange: (args: any) => void;
+  onBlur: () => void;
+}
+
+const CustomDatePicker = (props:ICustomDatePicker) => {
   const {
     value = new Date(),
     onChange = () => {},
-    onBlur = () => {},
-    handleDate = () => {},
+    onBlur = () => {}
   } = props;
-  const handleDateChange = (event, selectedDate) => {
+
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     if (event.type === 'dismissed') return;
     const currentDate = selectedDate || value;
-    onChange(currentDate); 
+    onChange(currentDate);
   };
+
   return (
     <View style={styles.datePickerWrapper}>
       <DateTimePicker

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import CardList from '../component/cardlist';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { getTravelRequestMy } from '../api-manager/travel';
 import { getItem } from '../utils/AsyncStorage';
+import NoRequest from '../component/norequest';
 
-const CompletedScreen = () => {
+interface ICompletedScreen {
+  navigation: {
+    navigate: (args: string) => void;
+  };
+}
+
+const CompletedScreen = ({ navigation }:ICompletedScreen) => {
   const [completeDetails, setCompleteDetails] = useState([]);
 
   useEffect(() => {
@@ -21,10 +28,26 @@ const CompletedScreen = () => {
   }, []);
 
   return (
-    <View>
-      <CardList data={completeDetails} type="Completed" />
+    <View style={styles.completeContainer}>
+      {completeDetails?.length > 0 ? (
+        <CardList data={completeDetails} type="Completed" />
+      ) : (
+        <NoRequest
+          navigation={navigation}
+          heading="No Completed Requests"
+          subHeading="You haven't completed any travel requests yet. Start by creating your
+          first travel request!"
+          iconName="airplane-sharp"
+        />
+      )}
     </View>
   );
 };
 
 export default CompletedScreen;
+
+const styles = StyleSheet.create({
+  completeContainer: {
+    flex: 1,
+  },
+});

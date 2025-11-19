@@ -11,7 +11,8 @@ project.ext.vectoricons = [
         'Entypo.ttf',
         'Feather.ttf',
         'Octicons.ttf',
-        'FontAwesome5.ttf'
+        'FontAwesome5.ttf',
+        'MaterialDesignIcons.ttf',
     ]
 ]
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

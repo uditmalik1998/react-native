@@ -33,9 +33,9 @@ const DrawerNavigation = () => {
         name="Tabs"
         component={TabNavigator}
         options={{
-          title: 'Home',
+          title: 'Travel Requests',
           drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="house" color={color} size={size} />
+            <MaterialIcons name="card-travel" color={color} size={size} />
           ),
         }}
       />

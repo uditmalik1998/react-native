@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import CardList from '../component/cardlist';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
 import { getTravelRequestMy } from '../api-manager/travel';
 import { getItem } from '../utils/AsyncStorage';
+import NoRequest from '../component/norequest';
 
-const PendingScreen = () => {
+interface IPendingScreen {
+  navigation: {
+    navigate: (args: string) => void;
+  };
+}
+
+
+const PendingScreen = ({ navigation }: IPendingScreen) => {
   const [pendingDetails, setpendingDetails] = useState([]);
 
   useEffect(() => {
@@ -22,10 +30,25 @@ const PendingScreen = () => {
   }, []);
 
   return (
-    <View>
-      <CardList data={pendingDetails} type={'Open'} />
+    <View style={styles.pendingContainer}>
+      {pendingDetails?.length > 0 ? (
+        <CardList data={pendingDetails} type={'Open'} />
+      ) : (
+        <NoRequest
+          heading="No Active Requests"
+          subHeading={`You don't have any active travel requests at the moment. Create a new request to get started!`}
+          iconName="pending-actions"
+          navigation={navigation}
+        />
+      )}
     </View>
   );
 };
 
 export default PendingScreen;
+
+const styles = StyleSheet.create({
+  pendingContainer: {
+    flex: 1,
+  },
+});
