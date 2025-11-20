@@ -17,6 +17,7 @@ import Font from 'react-native-vector-icons/FontAwesome';
 import { validateForm } from '../utils/commonfunctions';
 import { getItem, setItem } from '../utils/AsyncStorage';
 import { login } from '../api-manager/auth';
+import Loader from '../component/loader';
 
 interface IValues {
   userId: string;
@@ -37,6 +38,7 @@ const LoginScreen = () => {
     apiError: '',
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const navigation: any = useNavigation();
 
   useEffect(() => {
@@ -49,15 +51,19 @@ const LoginScreen = () => {
   }, []);
 
   const handleClick = async () => {
+    setLoading(true);
     setError({ userId: '', password: '', apiError: '' });
     const isError = validateForm(values, setError);
+
+    if (isError) setLoading(false);
+
     if (!isError) {
       try {
         const payload = {
           code: values.userId,
           password: values.password,
         };
-        const data:any = await login(payload);
+        const data: any = await login(payload);
 
         if (data.ok) {
           const json = await data.json();
@@ -72,8 +78,10 @@ const LoginScreen = () => {
         }
         const error = await data.text();
         setError(prevState => ({ ...prevState, apiError: error }));
+        setLoading(false);
       } catch (err: any) {
         console.error(err);
+        setLoading(false);
         setError(prevState => ({ ...prevState, apiError: err.message }));
       }
     }
@@ -144,7 +152,9 @@ const LoginScreen = () => {
             )}
           </View>
           <TouchableOpacity style={styles.proceedBtn} onPress={handleClick}>
-            <Text style={styles.txt}>Proceed</Text>
+            <Text style={styles.txt}>
+              {isLoading ? <Loader size="small" color="#FFFFFF"/> : 'Proceed'}
+            </Text>
           </TouchableOpacity>
           <Text style={styles.bottomHeading}>
             Something Text for the Bottom Heading

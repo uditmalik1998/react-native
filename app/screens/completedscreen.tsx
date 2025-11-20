@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { getTravelRequestMy } from '../api-manager/travel';
 import { getItem } from '../utils/AsyncStorage';
 import NoRequest from '../component/norequest';
+import Loader from '../component/loader';
 
 interface ICompletedScreen {
   navigation: {
@@ -11,11 +12,13 @@ interface ICompletedScreen {
   };
 }
 
-const CompletedScreen = ({ navigation }:ICompletedScreen) => {
+const CompletedScreen = ({ navigation }: ICompletedScreen) => {
   const [completeDetails, setCompleteDetails] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setisLoading(true);
       const empCode = await getItem('employeeCode');
       const data = await getTravelRequestMy(empCode);
       const filterCompleteData = data.filter(
@@ -23,9 +26,20 @@ const CompletedScreen = ({ navigation }:ICompletedScreen) => {
           item?.approvalStatusCodeNavigation?.statusName === 'Approved',
       );
       setCompleteDetails(filterCompleteData);
+      setisLoading(false);
     };
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Loader
+        size="large"
+        color="#D22B2B"
+        styles={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      />
+    );
+  }
 
   return (
     <View style={styles.completeContainer}>

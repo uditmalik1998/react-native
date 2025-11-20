@@ -20,15 +20,15 @@ interface IDropDownItems {
 }
 
 export interface IHandleSubmit {
-  assignedBy: () => string;
+  assignedBy: { code: string; empName: string };
   budgetedAmount: string;
   fromDate: Date;
-  locationFrom: () => string;
-  locationTo: () => string;
+  locationFrom: { code: string; storeName: string };
+  locationTo: { code: string; storeName: string };
   remarks: string;
   toDate: Date;
-  travelMode: () => string;
-  visitPurpose: () => number;
+  travelMode: { label: string; value: string };
+  visitPurpose: { code: number; purposeName: string };
 }
 
 interface IIsDatePickershow {
@@ -36,15 +36,20 @@ interface IIsDatePickershow {
   toDate: boolean;
 }
 
-const CreateScreen = () => {
+interface ICreateScreen {
+  navigation: { navigate: (args: string) => void };
+}
+
+const CreateScreen = ({ navigation }: ICreateScreen) => {
   const [dropdownData, setDropDownData] = useState<IDropDown>({
-    fromDate: 'mm/dd/yyyy',
-    toDate: 'mm/dd/yyyy',
+    fromDate: 'day month year',
+    toDate: 'day month year',
   });
   const [isDatePickershow, setIsDatePickerShow] = useState<IIsDatePickershow>({
     fromDate: false,
     toDate: false,
   });
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const [dropDownItems, setDropDownItems] = useState<IDropDownItems>({
     locationFromItems: [],
@@ -52,8 +57,11 @@ const CreateScreen = () => {
     assignedToItems: [],
     visitPurposeItems: [],
     modeItems: [
+      { label: 'Flight', value: 'flight' },
+      { label: 'Train', value: 'train' },
       { label: 'Bus', value: 'bus' },
       { label: 'Car', value: 'car' },
+      { label: 'Other', value: 'other' },
     ],
   });
   const [imageUri, setImageUri] = useState({});
@@ -63,7 +71,7 @@ const CreateScreen = () => {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const yyyy = date.getFullYear();
-    return `${mm}/${dd}/${yyyy}`;
+    return `${dd}/${mm}/${yyyy}`;
   };
 
   const handleFromDate = (fromData: Date) => {
@@ -89,18 +97,20 @@ const CreateScreen = () => {
   };
 
   const handleSubmit = async (data: IHandleSubmit) => {
+    setLoading(true);
     const fromDateString = data.fromDate.toISOString();
     const toDateString = data.toDate.toISOString();
     const empCode = await getItem('employeeCode');
 
     const payload = new FormData();
-    payload.append('PurposeCode', data.visitPurpose());
-    payload.append('ModeOfTravel', data.travelMode());
-    payload.append('LocationFromCode', data.locationFrom());
-    payload.append('LocationToCode', data.locationTo());
+    payload.append('MainFiles', imageUri);
+    payload.append('PurposeCode', data.visitPurpose?.code);
+    payload.append('ModeOfTravel', data.travelMode?.value);
+    payload.append('LocationFromCode', data.locationFrom?.code);
+    payload.append('LocationToCode', data.locationTo?.code);
     payload.append('VisitFromDate', fromDateString);
     payload.append('VisitToDate', toDateString);
-    payload.append('VisitAssignedBy', data.assignedBy());
+    payload.append('VisitAssignedBy', data.assignedBy?.code);
     payload.append('Remarks', data.remarks || '');
     payload.append('TotalAmount', data.budgetedAmount);
     payload.append('EmployeeCode', empCode);
@@ -109,16 +119,23 @@ const CreateScreen = () => {
       const response: any = await createTravelRequest(payload);
       if (response.ok) {
         setApiError('');
+        setLoading(false);
+        navigation.navigate('Pending');
       } else {
         const json = await response.json();
         if (json.message) {
           setApiError(json.message);
+        } else if (json?.title) {
+          setApiError(json.title);
         } else {
-          setApiError('Something went wrong');
+          setApiError('Something went wrong!');
         }
+        setLoading(false);
       }
     } catch (err) {
       console.error('Error while fetching...', err);
+      setApiError('Something went wrong!');
+      setLoading(false);
     }
   };
 
@@ -142,6 +159,7 @@ const CreateScreen = () => {
             handleDocumentSelection={handleDocumentSelection}
             handleSubmitForm={handleSubmit}
             apiError={apiError}
+            isLoading={isLoading}
           />
         </View>
       </ScrollView>

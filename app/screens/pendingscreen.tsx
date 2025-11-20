@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { getTravelRequestMy } from '../api-manager/travel';
 import { getItem } from '../utils/AsyncStorage';
 import NoRequest from '../component/norequest';
+import Loader from '../component/loader';
 
 interface IPendingScreen {
   navigation: {
@@ -15,9 +16,11 @@ interface IPendingScreen {
 
 const PendingScreen = ({ navigation }: IPendingScreen) => {
   const [pendingDetails, setpendingDetails] = useState([]);
+  const [isLoading, setisLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setisLoading(true);
       const empCode = await getItem('employeeCode');
       const data = await getTravelRequestMy(empCode);
       const filterPendingData = data.filter(
@@ -25,9 +28,20 @@ const PendingScreen = ({ navigation }: IPendingScreen) => {
           item?.approvalStatusCodeNavigation?.statusName === 'Pending',
       );
       setpendingDetails(filterPendingData);
+      setisLoading(false);
     };
     fetchData();
   }, []);
+
+  if(isLoading){
+    return (
+      <Loader
+        size="large"
+        color="#D22B2B"
+        styles={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      />
+    );
+  }
 
   return (
     <View style={styles.pendingContainer}>

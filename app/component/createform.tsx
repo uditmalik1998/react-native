@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import CustomDropDown from './customdropdown';
 import CustomDatePicker from './customdatepicker';
 import { useForm, Controller } from 'react-hook-form';
 import { useEffect, useRef } from 'react';
@@ -13,6 +12,8 @@ import { getAllEmployee } from '../api-manager/travel';
 import { getAllVisitPurpose } from '../api-manager/visitpurpose';
 import { storeLocation } from '../api-manager/storelocation';
 import { IHandleSubmit } from '../screens/createscreen';
+import CustomElementDropDown from './customelementdropdown';
+import Loader from './loader';
 
 interface ICreateForm {
   dropdownData: { fromDate: string; toDate: string };
@@ -30,6 +31,7 @@ interface ICreateForm {
   handleDocumentSelection: () => void;
   handleSubmitForm: ({}: IHandleSubmit) => void;
   apiError: string;
+  isLoading: boolean;
 }
 
 const CreateForm = (props: ICreateForm) => {
@@ -50,6 +52,7 @@ const CreateForm = (props: ICreateForm) => {
     handleDocumentSelection = () => {},
     handleSubmitForm = () => {},
     apiError = '',
+    isLoading = false,
   } = props;
 
   useEffect(() => {
@@ -71,41 +74,40 @@ const CreateForm = (props: ICreateForm) => {
       }
     })();
   }, []);
-
   const {
     handleSubmit,
     formState: { errors },
     control,
+    watch,
   }: any = useForm();
 
+  const locationFromData = watch('locationFrom');
+  console.log(locationFromData, '++++');
   return (
     <View style={styles.formContainer}>
       <Text style={styles.sectionTitle}>Travel Details</Text>
 
       <Text style={styles.label}>Location From</Text>
+
       <Controller
         control={control}
         name="locationFrom"
         rules={{ required: 'Please select the location From' }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <CustomDropDown
+          <CustomElementDropDown
+            data={dropDownItems.locationFromItems}
+            search={true}
             value={value}
-            setValue={onChange}
-            onBlur={onBlur}
-            items={dropDownItems.locationFromItems}
-            setItems={(newItems: any) =>
-              setDropDownItems((prev: any) => ({
-                ...prev,
-                locationFromItems: newItems,
-              }))
-            }
+            onChange={onChange}
+            labelField="storeName"
+            valueField="code"
             placeholder="Select Location From"
-            labelText="storeName"
-            valueText="code"
-            listMode="SCROLLVIEW"
+            searchPlaceholder="Search"
+            onBlur={onBlur}
           />
         )}
       />
+
       {errors.locationFrom && (
         <Text style={styles.error}>{errors.locationFrom.message}</Text>
       )}
@@ -115,26 +117,27 @@ const CreateForm = (props: ICreateForm) => {
       <Controller
         control={control}
         name="locationTo"
-        rules={{ required: 'Please Select Location To' }}
-        render={({ field: { onBlur, onChange, value } }) => (
-          <CustomDropDown
+        rules={{
+          required: 'Please Select Location To',
+          validate: item =>
+            item?.code !== locationFromData?.code ||
+            'Location From and Location To should not be same',
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <CustomElementDropDown
+            data={dropDownItems.locationToItems}
+            search={true}
             value={value}
-            setValue={onChange}
+            onChange={onChange}
+            labelField="storeName"
+            valueField="code"
+            placeholder="Select Location From"
+            searchPlaceholder="Search"
             onBlur={onBlur}
-            items={dropDownItems.locationToItems}
-            setItems={(newItems: any) =>
-              setDropDownItems((prev: any) => ({
-                ...prev,
-                locationToItems: newItems,
-              }))
-            }
-            placeholder="Select Location To"
-            labelText="storeName"
-            valueText="code"
-            listMode="SCROLLVIEW"
           />
         )}
       />
+
       {errors.locationTo && (
         <Text style={styles.error}>{errors.locationTo.message}</Text>
       )}
@@ -258,25 +261,24 @@ const CreateForm = (props: ICreateForm) => {
 
       <Text style={styles.label}>Assigned By</Text>
       <Controller
-        name="assignedBy"
         control={control}
+        name="assignedBy"
         rules={{ required: 'Please Enter Assigned By' }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <CustomDropDown
+          <CustomElementDropDown
+            data={assignedByRef.current}
+            search={true}
             value={value}
-            setValue={onChange}
-            items={assignedByRef.current}
-            onBlur={onBlur}
-            setItems={(newItems: any) => {
-              assignedByRef.current = newItems;
-            }}
+            onChange={onChange}
+            labelField="empName"
+            valueField="code"
             placeholder="Select Assigned By"
-            labelText="empName"
-            valueText="code"
-            listMode="MODAL"
+            searchPlaceholder="Search"
+            onBlur={onBlur}
           />
         )}
       />
+
       {errors.assignedBy && (
         <Text style={styles.error}>{errors.assignedBy.message}</Text>
       )}
@@ -284,28 +286,24 @@ const CreateForm = (props: ICreateForm) => {
 
       <Text style={styles.label}>Visit Purpose</Text>
       <Controller
-        name="visitPurpose"
         control={control}
+        name="visitPurpose"
         rules={{ required: 'Please Enter Visit Purpose' }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <CustomDropDown
+          <CustomElementDropDown
+            data={dropDownItems.visitPurposeItems}
+            search={true}
             value={value}
-            setValue={onChange}
-            onBlur={onBlur}
-            items={dropDownItems.visitPurposeItems}
-            setItems={(newItems: any) =>
-              setDropDownItems((prev: any) => ({
-                ...prev,
-                visitPurposeItems: newItems,
-              }))
-            }
+            onChange={onChange}
+            labelField="purposeName"
+            valueField="code"
             placeholder="Select Visit Purpose"
-            labelText="purposeName"
-            valueText="code"
-            listMode="SCROLLVIEW"
+            searchPlaceholder="Search"
+            onBlur={onBlur}
           />
         )}
       />
+
       {errors.visitPurpose && (
         <Text style={styles.error}>{errors.visitPurpose.message}</Text>
       )}
@@ -313,28 +311,24 @@ const CreateForm = (props: ICreateForm) => {
 
       <Text style={styles.label}>Mode of Travel</Text>
       <Controller
-        name="travelMode"
         control={control}
+        name="travelMode"
         rules={{ required: 'Please Enter Travel Mode' }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <CustomDropDown
+          <CustomElementDropDown
+            data={dropDownItems.modeItems}
+            search={true}
             value={value}
-            setValue={onChange}
-            onBlur={onBlur}
-            items={dropDownItems.modeItems}
-            setItems={(newItems: any) =>
-              setDropDownItems((prev: any) => ({
-                ...prev,
-                modeItems: newItems,
-              }))
-            }
+            onChange={onChange}
+            labelField="label"
+            valueField="value"
             placeholder="Select Travel Mode"
-            labelText="label"
-            valueText="value"
-            listMode="SCROLLVIEW"
+            searchPlaceholder="Search"
+            onBlur={onBlur}
           />
         )}
       />
+
       {errors.travelMode && (
         <Text style={styles.error}>{errors.travelMode.message}</Text>
       )}
@@ -382,9 +376,16 @@ const CreateForm = (props: ICreateForm) => {
 
       <TouchableOpacity
         style={styles.submitButton}
+        disabled={isLoading}
         onPress={handleSubmit(handleSubmitForm)}
       >
-        <Text style={styles.submitButtonText}>Submit Travel Request</Text>
+        <Text style={styles.submitButtonText}>
+          {isLoading ? (
+            <Loader size="small" color="#FFFFFF" />
+          ) : (
+            'Submit Travel Request'
+          )}
+        </Text>
       </TouchableOpacity>
     </View>
   );
